@@ -1,0 +1,24 @@
+The waveserv system directly indexes and reads the (SEG-Y) files in the current directory, handling endian and floating point conversion, and provides an updated listing.  Clicking the "Show" button beside an entry calls a plotting method, which generates a PNG image.  Run it by navigating to your directory containing FULLWV/OMEGA files and typing "waveserv [projnm]", where [projnm] is the name associated with the *.ini file.  It can also auto-detect this if there is only one project in the directory, but this fails for example during inversion because of the generation of tmp.* files.
+
+Access the interface by pointing a web browser at localhost:1503 (by default), or use the command-line interface to change the port ("waveserv --help").  If the server you're running it on isn't the local machine, you'll either need to specify the bind address as something other than 127.0.0.1 (a potential security issue), or SSH-tunnel from the local machine.
+
+ssh -f -N -L 1503:localhost:1503 [remotehost]
+
+Verbatim, except replace [remotehost] with your server's name (which you have SSH access to).  Then connect to localhost:1503 on your workstation.
+
+Put the directory you checked out the waveserv source into on the system path.  This requires the following Python libraries installed on the system, and is tested with Python 2.6 or 2.7:
+
+Custom Libraries
+---
+pygeo			Python libraries by Brendan Smithyman
+svn co https://skylab.bitsmithy.net/svn/public/pygeo/trunk pygeo
+---
+
+Generic Libraries
+---
+python-numpy 		Numerical Python
+python-django >= 1.2	Django Web Framework
+python-matplotlib	Matlab-like plotting environment
+---
+
+I would expect all of the generic libraries to be in the package manager, but if not (e.g. CentOS has terrible Python support) they could be installed using another method like "easy_install".  I haven't tested with older versions of numpy and matplotlib, but I'm fairly sure that the Django framework needs to be at minimum v1.2.

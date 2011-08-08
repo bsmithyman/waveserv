@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<link href="/media/base.css" rel="stylesheet" />
+<title>waveserv | {% block title %}{{ pagetitle }}{% endblock title %}</title>
+{% block extrahead %}{% endblock extrahead %}
+</head>
+
+<body>
+<div id="wheader">
+  <div id="nheader">
+    <a href="/index" title="waveserv"><h1>waveserv</h1></a>
+    <h2>{% block h2title %}{{ pagetitle }}{% endblock h2title %}</h2>
+    <span id="headtime">{% now "Y-m-d H:i:s T" %}</div>
+  </div>
+</div>
+<div id="container">
+  {% block subnav %}
+  {% endblock subnav %}
+  <div id="content">
+    {% block content %}{% endblock content %}
+  </div>
+</div>
+<div id="wfooter">
+  <div id="nfooter">
+  <span class="version">Results rendered by WaveServ v1.0 | &copy; 2011 Brendan Smithyman</span>
+  <span class="thanks">WaveServ is powered by <a href="http://www.python.org/" title="Python.org">Python</a> and the <a href="http://www.djangoproject.com/" title="Django Web Site">Django Project</a></span>
+  </div>
+</div>
+
+</body>
+</html>

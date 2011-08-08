@@ -1,0 +1,249 @@
+body {
+  background-color: #234F32; 
+  color: black;
+  padding: 0;
+  margin: 0;
+  font-family: arial, sans serif;
+}
+
+a, a:visited {
+  color: #487858;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#container {
+  background-color: #092E20;
+  margin: 1.5em auto 0 auto;
+  padding: 10px 0 0 0;
+}
+
+#wheader {
+  top: 0;
+  display: block;
+  position: fixed;
+  background-color: #234F32;
+  margin: 0;
+  color: white;
+  width: 100%;
+}
+
+#nheader {
+  display: block;
+  margin: 0 auto;
+  padding: 0.5em 1em 0 1em;
+  height: 1.5em;
+  width: 1024px;
+}
+
+#nheader a {
+  text-decoration: none;
+}
+
+#headtime {
+  display: inline;
+  margin: 0 10px 0 0;
+  float: right;
+}
+
+#subnav {
+  display: block;
+  position: fixed;
+  background-color: LemonChiffon;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  margin: 0;
+  padding: 5px 0;
+  width: 1024px;
+}
+
+#subnav p {
+  text-align: center;
+  padding: 0 10px;
+  margin: 0;
+  font-size: 80%;
+}
+
+#content {
+  background-color: white;
+  display: block;
+  width: 1024px;
+  margin: 0 auto 0 auto;
+  padding: 10px;
+  min-height: 600px;
+}
+
+#wfooter {
+  display: block;
+  background-color: white;
+  margin: 0;
+  color: #AAA;
+  font-family: "Trebuchet MS", sans-serif;
+  width: 100%;
+  border-top: 1px solid #234F32;
+  border-bottom: 1px solid #234F32;
+}
+
+#nfooter {
+  display: block;
+  margin: 0 auto;
+  padding: 0.5em 1em 0 1em;
+  height: 1.5em;
+  width: 1024px;
+  font-size: smaller;
+}
+
+#nfooter a {
+  color: orange;
+}
+
+#nfooter .version {
+  margin: 0 auto 0 0;
+  float: left;
+}
+
+#nfooter .thanks {
+  margin: 0 0 0 auto;
+  float: right;
+}
+
+h1 {
+  float: left;
+  display: block;
+  height: 1.5em;
+  width: 6em;
+  text-align: center;
+  padding: 0.5em 0 0 0;
+  margin: -0.5em 10px 0 10px;
+  font-size: 100%;
+  font-weight: normal;
+  font-family: "Trebuchet MS", sans-serif;
+  color: #9AEF3F;
+  background-color: #092E20;
+  clear: none;
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+}
+
+h2 {
+  display: inline;
+  padding: 0;
+  margin: 0 0 0 0;
+  font-size: 100%;
+  font-weight: normal;
+  font-family: "Trebuchet MS", sans-serif;
+  color: white;
+}
+
+h3 {
+  display: block;
+  border-top: 1px solid #092E20;
+  border-bottom: 1px solid #092E20;
+  font-family: verdana;
+  font-weight: normal;
+  text-align: center;
+  background-color: #487858;
+  color: white;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+hr {
+  width: 100%;
+  color: white;
+  background-color: white;
+  height: 0px;
+  border-top: 1px dashed #2D2D2D;
+}
+
+table.fullwidthtable {
+  width: 100%;
+}
+
+.tdfilename {
+}
+
+.tditeration {
+  width: 100px;
+  text-align: right;
+}
+
+.tdfrequency {
+  width: 100px;
+  text-align: right;
+}
+
+.tdfilesize {
+  width: 100px;
+  text-align: right;
+}
+
+.tdmodified {
+  width: 220px;
+  text-align: right;
+}
+
+.tdaction {
+  width: 50px;
+}
+
+.fullwidthtable th {
+  background-color: white;
+  color: #234F32;
+  font-weight: normal;
+  border-bottom: 1px solid #234F32;
+  font-family: arial, sans serif;
+  text-align: center;
+}
+
+.fullwidthtable tr {
+  font-family: monospace;
+}
+
+.fullwidthtable th a {
+  display: block;
+  width: 0.5em;
+  height: 0.5em;
+  background-color: #F0F0F0;
+  border: 1px solid #487858;
+  text-decoration: none;
+  margin: none;
+  margin-top: 5px;
+  float: right;
+}
+
+.fullwidthtable th a:hover {
+  background-color: orange;
+  color: black;
+}
+
+.fullwidthtable tr .sortbutton {
+}
+
+.fullwidthtable tr .actsortbutton {
+  background-color: orange;
+}
+
+.oddrow {
+  background-color: white;
+}
+
+.evenrow {
+  background-color: #FFF8F0;
+}
+
+a.button {
+  margin: 0 auto;
+  display: block;
+  width: 80%;
+  background-color: #F0F0F0;
+  border: 1px solid #487858;
+  text-decoration: none;
+}
+
+a.button:hover {
+  background-color: orange;
+}

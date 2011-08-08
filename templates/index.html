@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>Listing of: {{ cwd }}</p>
+
+{% for matchclass in matchlist|dictsort:"id" %}
+  {% if matchclass.result|length != 0 %}
+    <h3>{{ matchclass.description }} Files</h3>
+    <table class="fullwidthtable">
+      <tr>
+        <th>
+          Show
+        </th>
+        <th>
+          Get
+        </th>
+        {% for tag in sortkeys %}
+        <th>
+          <a {% if sortby == tag %}class='actsortbutton'{% else %}class="sortbutton"{% endif %} title="Sort by {{ tag|capfirst }}" href="?SortKey={{ tag }}">&nbsp;</a>
+          {{ tag|capfirst }}
+        </th>
+        {% endfor %}
+      </tr>
+      {% for item in matchclass.result|dictsort:sortby %}
+      <tr class="{% if forloop.counter|divisibleby:2 %}evenrow{% else %}oddrow{% endif %}">
+        <td class="tdaction"><a class="button" href="{% url show item.filename %}" title="Display {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdaction"><a class="button" href="{% url download item.filename %}" title="Download {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdfilename">{{ item.filename }}</td>
+        <td class="tditeration">{% if item.iteration != None %}{{ item.iteration }}{% endif %}</td>
+        <td class="tdfrequency">{% if item.frequency != None %}{{ item.frequency }}{% endif %}</td>
+        <td class="tdfilesize">{{ item.size|filesizeformat }}</td>
+        <td class="tdmodified">{{ item.modified|date:"Y-m-d H:i:s T" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+{% endfor %}
+
+{% endblock content %}

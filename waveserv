@@ -1,0 +1,140 @@
+#!/usr/bin/env python
+
+import os
+import glob
+from pygeo.fullpy import readini
+import sys
+
+# ----------------------------------------------------------------------
+# Settings
+
+AUTHORSHIP = 'Brendan Smithyman, July 2011'
+VERSION = '%prog v1.0\n'
+DESCRIPTION = '''Launches an interactive web server for monitoring OMEGA/FULLWV progress.  You must specify the project name if more than one file ends in '.ini'.
+'''
+EPILOG = '''NOTE: This software uses the Django test web server and does not incorporate sufficient security to use in a public network.  Connections are only accepted from the local host if using the default settings; however if you change the '--bind' option make sure to configure your firewall accordingly.
+'''
+
+defaultbind    = '127.0.0.1:1503'
+defaultdbname  = 'waveserv.db'
+
+# ----------------------------------------------------------------------
+# Parameter parsing
+
+from optparse import OptionParser
+
+usage = '%prog [options] projectname'
+
+parser = OptionParser(usage       = usage,
+                      version     = VERSION,
+                      description = DESCRIPTION,
+                      epilog      = EPILOG)
+
+parser.add_option('-v', '--verbose', action='store_true', dest='verbose',
+                  help='display additional information')
+
+parser.add_option('-b', '--bind', action='store', dest='bind', metavar='ADDR',
+                  help='server address to bind [Default: %default]')
+
+parser.add_option('-d', '--db', action='store', dest='dbname', metavar='FILE',
+                  help='filename for server database [Default: %default]')
+
+# Doesn't work because the debug pages need the settings file name intact
+#parser.add_option('-g', '--serverdebug', action='store_true', dest='serverdebug',
+#                  help='enable debugging for web server')
+
+parser.add_option('-k', '--keep', action='store_true', dest='keep',
+                  help='Keep temporary files on exit [Default: %default]')
+
+parser.set_defaults(verbose     = False,
+                    bind        = defaultbind,
+                    dbname      = defaultdbname,
+                    #serverdebug = False,
+                    keep        = False,
+)
+
+(options, args) = parser.parse_args()
+
+if (len(args) == 0):
+  globresult = glob.glob('*.ini')
+  if (len(globresult) == 1):
+    projnm = os.path.splitext(globresult[0])[0]
+  else:
+    parser.error('Please specify a project name!')
+else:
+  projnm = args[0]
+
+try:
+  inidict = readini(projnm + '.ini')
+except:
+  parser.error('Project ini file %s.ini does not exist!'%(projnm,))
+
+# ----------------------------------------------------------------------
+# Django settings initialization
+
+cwd = os.getcwd()
+SCRIPTDIR = os.path.abspath(os.path.dirname(globals()['__file__']))
+sys.path.append(SCRIPTDIR)
+SERVDIR = SCRIPTDIR + '/server'
+TEMPLATEDIR = SCRIPTDIR + '/templates'
+STATICDIR = SCRIPTDIR + '/media'
+DBFILE = cwd + '/' + options.dbname
+
+from django.conf import settings
+
+settings.configure(TEMPLATE_DIRS    = (TEMPLATEDIR,),
+                   STATICFILES_DIRS = (STATICDIR,),
+                   ROOT_URLCONF     = 'server.urls',
+                   TIME_ZONE        = None,
+                   DATABASES        = {'default': {
+                                      'ENGINE':   'django.db.backends.sqlite3',
+                                      'NAME':     DBFILE,
+                                      'USER':     '',
+                                      'PASSWORD': '',
+                                      'HOST':     '',
+                                      'PORT':     ''}},
+                   DEBUG            = False,
+                   MIDDLEWARE_CLASSES = (
+			'django.middleware.common.CommonMiddleware',
+			'django.contrib.sessions.middleware.SessionMiddleware',
+			'django.middleware.csrf.CsrfViewMiddleware',),
+                   INSTALLED_APPS   = (	'django.contrib.contenttypes',
+					'django.contrib.sessions',
+					'server',),
+)
+
+settings.staticdir = STATICDIR
+
+# ----------------------------------------------------------------------
+# Django webserver start
+
+from django.core import management
+from server.models import Project
+
+# Create any necessary database entries
+management.call_command('syncdb')
+
+projdict = {
+	'projnm': 	projnm,
+	'nx':		inidict['nx'],
+	'nz':		inidict['nz'],
+	'dx':		inidict['dx'],
+	'dz':		inidict['dz'],
+	'xorig':	inidict['xorig'],
+	'zorig':	inidict['zorig'],
+	'dt':		inidict['deltatt'],
+	'ns':		inidict['ns'],
+	'nr':		inidict['nr'],
+	'ng':		inidict['ng'],
+}
+pinst = Project.objects.create(**projdict)
+
+# Run the web server
+management.call_command('runserver', options.bind)
+
+# Clean up database
+if (os.path.isfile(DBFILE) and (not options.keep)):
+  try:
+    os.remove(DBFILE)
+  except:
+    pass

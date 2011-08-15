@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, QueryDict
 from django.core.urlresolvers import reverse
 #from django.views.decorators.gzip import gzip_page
+from server.models import RenderResult
 import os
 import glob
 import datetime
@@ -23,6 +24,13 @@ page_titles = {	'index':	'Index',
 }
 
 defSortKey = 'filename'
+
+DIBUPATH = project.dibupath
+try:
+  os.mkdir(DIBUPATH)
+except OSError (errno, strerror):
+  if (errno != 17): # Exists
+    raise
 
 # ------------------------------------------------------------------------
 # Helper functions
@@ -118,12 +126,25 @@ def view_show (request, renderpath):
 # Can enable gzip compression, but it doesn't do much for PNG files
 # @gzip_page
 def view_render (request, filename):
-  image = handle(clean_input(filename))
-  if (image != None):
-    response = HttpResponse(mimetype="image/png")
-    image.save(response, "PNG")
-    return response
+  dirty = True
+  try:
+    rr = RenderResult.objects.get(filename=filename)
+    if (rr.lastmodified == os.path.getmtime(filename)):
+      dirty = False
+  except DoesNotExist:
+    rr = RenderResult(filename=filename, lastmodified=os.path.getmtime(filename), requesthash='',diskbuffer=DIBUPATH+'/'+filename)
 
+  if (dirty):
+    image = handle(clean_input(filename))
+    if (image != None):
+      image.save(rr.diskbuffer, 'PNG')
+      response = HttpResponse(mimetype='image/png')
+      image.save(response, 'PNG')
+      return response
+    else:
+      raise Http404
   else:
-    raise Http404
+    fp = open(rr.diskbuffer, 'rb')
+    response = HttpResponse(fp, mimetype='image/png')
+    return response
 

@@ -4,6 +4,7 @@ import os
 import glob
 from pygeo.fullpy import readini
 import sys
+import shutil
 
 # ----------------------------------------------------------------------
 # Settings
@@ -17,6 +18,7 @@ EPILOG = '''NOTE: This software uses the Django test web server and does not inc
 
 defaultbind    = '127.0.0.1:1503'
 defaultdbname  = 'waveserv.db'
+defaultbufpath = '.buffer'
 
 # ----------------------------------------------------------------------
 # Parameter parsing
@@ -44,13 +46,17 @@ parser.add_option('-d', '--db', action='store', dest='dbname', metavar='FILE',
 #                  help='enable debugging for web server')
 
 parser.add_option('-k', '--keep', action='store_true', dest='keep',
-                  help='Keep temporary files on exit [Default: %default]')
+                  help='keep temporary files on exit [Default: %default]')
+
+parser.add_option('-p', '--dibupath', action='store', dest='dibupath',
+                  help='path for temporary image files [Default: %default]')
 
 parser.set_defaults(verbose     = False,
                     bind        = defaultbind,
                     dbname      = defaultdbname,
                     #serverdebug = False,
                     keep        = False,
+                    dibupath	= defaultbufpath,
 )
 
 (options, args) = parser.parse_args()
@@ -93,7 +99,7 @@ settings.configure(TEMPLATE_DIRS    = (TEMPLATEDIR,),
                                       'PASSWORD': '',
                                       'HOST':     '',
                                       'PORT':     ''}},
-                   DEBUG            = False,
+                   DEBUG            = True,
                    MIDDLEWARE_CLASSES = (
 			'django.middleware.common.CommonMiddleware',
 			'django.contrib.sessions.middleware.SessionMiddleware',
@@ -116,6 +122,7 @@ management.call_command('syncdb')
 
 projdict = {
 	'projnm': 	projnm,
+	'dibupath':	options.dibupath,
 	'nx':		inidict['nx'],
 	'nz':		inidict['nz'],
 	'dx':		inidict['dx'],
@@ -138,3 +145,6 @@ if (os.path.isfile(DBFILE) and (not options.keep)):
     os.remove(DBFILE)
   except:
     pass
+
+if (os.path.isdir(options.dibupath) and (not options.keep)):
+  shutil.rmtree(options.dibupath, ignore_errors=True)

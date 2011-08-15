@@ -2,6 +2,7 @@ from django.db import models
 
 class Project (models.Model):
   projnm = models.CharField(max_length=40)
+  dibupath = models.CharField(max_length=128)
   nx = models.IntegerField()
   nz = models.IntegerField()
   dx = models.FloatField()

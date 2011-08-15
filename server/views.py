@@ -28,7 +28,7 @@ defSortKey = 'filename'
 DIBUPATH = project.dibupath
 try:
   os.mkdir(DIBUPATH)
-except OSError (errno, strerror):
+except OSError as (errno, strerror):
   if (errno != 17): # Exists
     raise
 
@@ -126,15 +126,18 @@ def view_show (request, renderpath):
 # Can enable gzip compression, but it doesn't do much for PNG files
 # @gzip_page
 def view_render (request, filename):
+  filedt = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
   dirty = True
   try:
     rr = RenderResult.objects.get(filename=filename)
-    if (rr.lastmodified == os.path.getmtime(filename)):
+    if (rr.lastmodified == filedt):
       dirty = False
-  except DoesNotExist:
-    rr = RenderResult(filename=filename, lastmodified=os.path.getmtime(filename), requesthash='',diskbuffer=DIBUPATH+'/'+filename)
+  except:
+    rr = RenderResult(filename=filename, lastmodified=filedt, requesthash='',diskbuffer='%s/%s.png'%(DIBUPATH, filename))
+    rr.save()
 
   if (dirty):
+    print('DIRTY: Rendering %s...'%filename)
     image = handle(clean_input(filename))
     if (image != None):
       image.save(rr.diskbuffer, 'PNG')
@@ -144,6 +147,7 @@ def view_render (request, filename):
     else:
       raise Http404
   else:
+    print('CLEAN: Reading %s from cache...'%filename)
     fp = open(rr.diskbuffer, 'rb')
     response = HttpResponse(fp, mimetype='image/png')
     return response

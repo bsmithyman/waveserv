@@ -25,6 +25,8 @@ page_titles = {	'index':	'Index',
 
 defSortKey = 'filename'
 
+DEBUG = project.debug
+VERBOSE = project.verbose
 DIBUPATH = project.dibupath
 try:
   os.mkdir(DIBUPATH)
@@ -137,7 +139,7 @@ def view_render (request, filename):
     rr.save()
 
   if (dirty):
-    print('DIRTY: Rendering %s...'%filename)
+    if (VERBOSE): print('DIRTY: Rendering %s...'%filename)
     image = handle(clean_input(filename))
     if (image != None):
       image.save(rr.diskbuffer, 'PNG')
@@ -147,7 +149,7 @@ def view_render (request, filename):
     else:
       raise Http404
   else:
-    print('CLEAN: Reading %s from cache...'%filename)
+    if (VERBOSE): print('CLEAN: Reading %s from cache...'%filename)
     fp = open(rr.diskbuffer, 'rb')
     response = HttpResponse(fp, mimetype='image/png')
     return response

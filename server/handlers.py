@@ -10,6 +10,9 @@ import matplotlib.cm
 from server.models import Project
 project = Project.objects.all()[0]
 
+DEBUG = project.debug
+VERBOSE = project.verbose
+
 endian = 'Big'
 dpi = 100
 figopts = {
@@ -92,19 +95,19 @@ def get_ilog (filename):
   return logdict
 
 def get_segy_time (filename):
-  sf = SEGYFile(filename, endian=endian, verbose=False)
+  sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   traces = sf.readTraces()
 
   return [traces, sf.bhead['hdt']]
 
 def get_segy_real (filename):
-  sf = SEGYFile(filename, endian=endian, verbose=False)
+  sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   traces = sf.readTraces()
 
   return traces
 
 def get_segy_complex (filename):
-  sf = SEGYFile(filename, endian=endian, verbose=False)
+  sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   real = sf.readTraces(sf.findTraces('trid',1001,1001))
   imag = sf.readTraces(sf.findTraces('trid',1002,1002))
 

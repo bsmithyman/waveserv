@@ -41,9 +41,9 @@ parser.add_option('-b', '--bind', action='store', dest='bind', metavar='ADDR',
 parser.add_option('-d', '--db', action='store', dest='dbname', metavar='FILE',
                   help='filename for server database [Default: %default]')
 
-# Doesn't work because the debug pages need the settings file name intact
-#parser.add_option('-g', '--serverdebug', action='store_true', dest='serverdebug',
-#                  help='enable debugging for web server')
+# Doesn't work with 1.2 because the debug pages need the settings file name intact
+parser.add_option('-g', '--serverdebug', action='store_true', dest='serverdebug',
+                  help='enable debugging for web server')
 
 parser.add_option('-k', '--keep', action='store_true', dest='keep',
                   help='keep temporary files on exit [Default: %default]')
@@ -54,7 +54,7 @@ parser.add_option('-p', '--dibupath', action='store', dest='dibupath',
 parser.set_defaults(verbose     = False,
                     bind        = defaultbind,
                     dbname      = defaultdbname,
-                    #serverdebug = False,
+                    serverdebug = False,
                     keep        = False,
                     dibupath	= defaultbufpath,
 )
@@ -99,7 +99,7 @@ settings.configure(TEMPLATE_DIRS    = (TEMPLATEDIR,),
                                       'PASSWORD': '',
                                       'HOST':     '',
                                       'PORT':     ''}},
-                   DEBUG            = True,
+                   DEBUG            = options.serverdebug,
                    MIDDLEWARE_CLASSES = (
 			'django.middleware.common.CommonMiddleware',
 			'django.contrib.sessions.middleware.SessionMiddleware',
@@ -123,6 +123,8 @@ management.call_command('syncdb')
 projdict = {
 	'projnm': 	projnm,
 	'dibupath':	options.dibupath,
+	'debug':	options.serverdebug,
+	'verbose':	options.verbose,
 	'nx':		inidict['nx'],
 	'nz':		inidict['nz'],
 	'dx':		inidict['dx'],

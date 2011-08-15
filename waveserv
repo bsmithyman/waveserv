@@ -17,7 +17,7 @@ EPILOG = '''NOTE: This software uses the Django test web server and does not inc
 '''
 
 defaultbind    = '127.0.0.1:1503'
-defaultdbname  = 'waveserv.db'
+defaultdbname  = '.waveserv.db'
 defaultbufpath = '.buffer'
 
 # ----------------------------------------------------------------------

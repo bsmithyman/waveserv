@@ -70,6 +70,8 @@ def view_index (request):
 
   matchlist = []
 
+  youngest = datetime.datetime.fromtimestamp(0)
+  oldest = datetime.datetime.now()
   for key, value in redict_auth.iteritems():
     matchobj = [result for result in [value[2].match(item) for item in listing] if result]
     matches = [part.group() for part in matchobj]
@@ -78,6 +80,14 @@ def view_index (request):
     size = [os.path.getsize(item) for item in matches]
     freq = [result['freq'] if ('freq' in result and result['freq'] != '') else None for result in extras]
     iteration = [int(result['iter']) if ('iter' in result and result['iter'] != '') else None for result in extras]
+    for stamp in modified:
+      if (stamp < youngest):
+        youngest = stamp
+      if (stamp > oldest):
+        oldest = stamp
+
+    stamprange = youngest - oldest
+
     items = []
     for i in xrange(len(matches)):
       items.append({
@@ -86,6 +96,7 @@ def view_index (request):
 		'size':		size[i],
 		'iteration':	iteration[i],
 		'frequency':	freq[i],
+		'freshness':	100*(modified[i]-oldest).seconds/stamprange.seconds
       })
     matchkeys = {
 		'name':		key,

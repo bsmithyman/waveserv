@@ -29,7 +29,7 @@
         <td class="tditeration">{% if item.iteration != None %}{{ item.iteration }}{% endif %}</td>
         <td class="tdfrequency">{% if item.frequency != None %}{{ item.frequency }}{% endif %}</td>
         <td class="tdfilesize">{{ item.size|filesizeformat }}</td>
-        <td class="tdmodified">{{ item.modified|date:"Y-m-d H:i:s T" }}</td>
+        <td class="tdmodified"><div id="freshnessindicator" style="background-color: rgb(127,{% widthratio item.freshness 100 255 %},0);"></div>{{ item.modified|date:"Y-m-d H:i:s T" }}</td>
       </tr>
       {% endfor %}
     </table>

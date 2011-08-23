@@ -14,6 +14,10 @@
         <th>
           Get
         </th>
+        <th>
+         FI
+        </th>
+          
         {% for tag in sortkeys %}
         <th>
           <a {% if sortby == tag %}class='actsortbutton'{% else %}class="sortbutton"{% endif %} title="Sort by {{ tag|capfirst }}" href="?SortKey={{ tag }}">&nbsp;</a>
@@ -25,11 +29,12 @@
       <tr class="{% if forloop.counter|divisibleby:2 %}evenrow{% else %}oddrow{% endif %}">
         <td class="tdaction"><a class="button" href="{% url show item.filename %}" title="Display {{ item.filename }}">&nbsp;</a></td>
         <td class="tdaction"><a class="button" href="{% url download item.filename %}" title="Download {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdfreshnessindicator">{% if item.freshness != None %}<a class="freshnessindicator" style="background-color: rgb(192,{% widthratio item.freshness 1 255 %},128);"></a>{% endif %}</td>
         <td class="tdfilename">{{ item.filename }}</td>
         <td class="tditeration">{% if item.iteration != None %}{{ item.iteration }}{% endif %}</td>
         <td class="tdfrequency">{% if item.frequency != None %}{{ item.frequency }}{% endif %}</td>
         <td class="tdfilesize">{{ item.size|filesizeformat }}</td>
-        <td class="tdmodified"><div id="freshnessindicator" style="background-color: rgb(127,{% widthratio item.freshness 100 255 %},0);"></div>{{ item.modified|date:"Y-m-d H:i:s T" }}</td>
+        <td class="tdmodified">{{ item.modified|date:"Y-m-d H:i:s T" }}</td>
       </tr>
       {% endfor %}
     </table>

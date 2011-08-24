@@ -3,7 +3,7 @@ from django.template.defaultfilters import escape
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse, Http404, HttpResponseRedirect, QueryDict
 from django.core.urlresolvers import reverse
-#from django.views.decorators.gzip import gzip_page
+from django.views.decorators.gzip import gzip_page
 from server.models import RenderResult
 import os
 import glob
@@ -52,6 +52,7 @@ def clean_input (filename):
 # ------------------------------------------------------------------------
 # Main site index
 
+@gzip_page
 def view_index (request):
   s = request.session
   r = request.REQUEST

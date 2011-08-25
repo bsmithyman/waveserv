@@ -92,8 +92,11 @@ def view_index (request):
         oldest = ts
 
     stamprange = youngest - oldest
+    if (stamprange != 0):
+      freshnesses = [(float(mtime.strftime('%s'))-oldest) / stamprange for mtime in modified]
+    else:
+      freshnesses = [0. for mtime in modified]
 
-    freshnesses = [(float(mtime.strftime('%s'))-oldest) / stamprange for mtime in modified]
     freshnesses = [fresh if (fresh > freshthresh) else None for fresh in freshnesses]
 
     items = []

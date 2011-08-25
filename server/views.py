@@ -24,7 +24,6 @@ page_titles = {	'index':	'Index',
 }
 
 defSortKey = 'filename'
-freshthresh = 0.1
 
 DEBUG = project.debug
 VERBOSE = project.verbose
@@ -71,8 +70,6 @@ def view_index (request):
 
   matchlist = []
 
-  youngest = 0
-  oldest = int(datetime.datetime.now().strftime('%s'))
   for key, value in redict_auth.iteritems():
     matchobj = [result for result in [value[2].match(item) for item in listing] if result]
     matches = [part.group() for part in matchobj]
@@ -81,20 +78,6 @@ def view_index (request):
     size = [os.path.getsize(item) for item in matches]
     freq = [result['freq'] if ('freq' in result and result['freq'] != '') else None for result in extras]
     iteration = [int(result['iter']) if ('iter' in result and result['iter'] != '') else None for result in extras]
-
-
-    for item in modified:
-      ts = int(item.strftime('%s'))
-      if (youngest < ts):
-        youngest = ts
-      if (oldest > ts):
-        oldest = ts
-
-    stamprange = youngest - oldest
-
-    freshnesses = [(float(mtime.strftime('%s'))-oldest) / stamprange for mtime in modified]
-    freshnesses = [fresh if (fresh > freshthresh) else None for fresh in freshnesses]
-
     items = []
     for i in xrange(len(matches)):
       items.append({
@@ -103,7 +86,6 @@ def view_index (request):
 		'size':		size[i],
 		'iteration':	iteration[i],
 		'frequency':	freq[i],
-		'freshness':	freshnesses[i],
       })
     matchkeys = {
 		'name':		key,

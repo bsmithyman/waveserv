@@ -165,8 +165,8 @@ redict.update(redict_auth)
 # Figure defines
 figextent = (	project.xorig,
 		project.xorig + project.dx*project.nx,
-		project.zorig,
-		project.zorig + project.dz*project.nz)
+		project.zorig + project.dz*project.nz,
+		project.zorig)
 
 # ------------------------------------------------------------------------
 # File renderers

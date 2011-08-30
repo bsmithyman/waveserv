@@ -248,7 +248,7 @@ def render_model_real (traces, figlabels, plotopts):
 
   ax = fig.add_subplot(1,1,1)
   im = ax.imshow(traces.T, extent=figextent, **plotopts[0])
-  cb = fig.colorbar(im, orientation=figmode)
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
   cb.set_label(figlabels['cb'])
 
   return fig
@@ -269,7 +269,7 @@ def render_wavefield_complex (traces, figlabels, plotopts):
     ax = fig.add_subplot(1,2,1)
   ax.set_title('Real')
   im = ax.imshow(real.T, extent=figextent, **plotopts[0])
-  cb = fig.colorbar(im, orientation=figmode)
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
   cb.set_label(figlabels['cb'])
 
   if (figmode == 'horizontal'):
@@ -278,7 +278,7 @@ def render_wavefield_complex (traces, figlabels, plotopts):
     ax = fig.add_subplot(1,2,2)
   ax.set_title('Imaginary')
   im = ax.imshow(imag.T, extent=figextent, **plotopts[1])
-  cb = fig.colorbar(im, orientation=figmode)
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
   cb.set_label(figlabels['cb'])
 
   return fig
@@ -296,7 +296,7 @@ def render_utest (traces, figlabels, plotopts):
   ax = fig.add_subplot(2,1,2)
   ax.set_title('Amplitude')
   im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
-  cb = fig.colorbar(im, orientation='horizontal')
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['cb'])
 
   return fig

@@ -5,7 +5,9 @@
 
 {% for matchclass in matchlist|dictsort:"id" %}
   {% if matchclass.result|length != 0 %}
-    <h3>{{ matchclass.description }} Files</h3>
+    <a name="{{ matchclass.description }}">
+      <h3>{{ matchclass.description }} Files</h3>
+    </a>
     <table class="fullwidthtable">
       <tr>
         <th>
@@ -20,7 +22,7 @@
           
         {% for tag in sortkeys %}
         <th>
-          <a {% if sortby == tag %}class='actsortbutton'{% else %}class="sortbutton"{% endif %} title="Sort by {{ tag|capfirst }}" href="?SortKey={{ tag }}">&nbsp;</a>
+          <a {% if sortby == tag %}class='actsortbutton'{% else %}class="sortbutton"{% endif %} title="Sort by {{ tag|capfirst }}" href="?SortKey={{ tag }}#{{ matchclass.description }}">&nbsp;</a>
           {{ tag|capfirst }}
         </th>
         {% endfor %}

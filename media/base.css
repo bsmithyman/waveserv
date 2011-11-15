@@ -163,6 +163,17 @@ table.fullwidthtable {
   width: 100%;
 }
 
+.tdfreshnessindicator {
+  width: 20px;
+}
+
+.freshnessindicator {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: auto;
+}
+
 .tdfilename {
 }
 

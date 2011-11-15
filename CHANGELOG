@@ -1,0 +1,17 @@
+2011-11-15	Brendan Smithyman	<bsmithyman@eos.ubc.ca>
+
+Tagging v1.1
+
+* Massive restructuring of the comments and self-documentation in the code (hopefully this will now be much clearer and easier to follow).
+
+* Brought the "Freshness Indicator" codebase to the trunk, since it seems to be stable at this point.
+
+* Fixed the FI so that the colour scale is determined per each set of files; this seems to result in a more useful indication.
+
+* Added anchors on the /index page to help avoid losing your place when changing sorting options.  The easiest/cleanest way to do this was to leave the GET options in place on the url of the page; if you don't like this, you un-comment a line in the view_index(...) function of views.py.  However, you will lose the new features.
+
+TODO: I'd really like to figure out how to change the sort order of the modification date so that new items appear at the top.  I have yet to find a really clean way to do this, without substantially increasing the time needed to render the page.
+
+TODO: The plotting for geometry still has not been implemented.
+
+TODO: There is still no easy way to change plotting options on the fly from the web interface (i.e. without editing the Python code).  Some kind of processing pipeline might be useful.  Also requires activating the "requesthash" terms in the caching system.

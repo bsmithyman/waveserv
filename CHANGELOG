@@ -2,6 +2,10 @@
 
 Tagging v1.1
 
+* Added caching system to reduce computation when a file has not changed.
+
+* Added gzip compression on text-heavy pages.
+
 * Massive restructuring of the comments and self-documentation in the code (hopefully this will now be much clearer and easier to follow).
 
 * Brought the "Freshness Indicator" codebase to the trunk, since it seems to be stable at this point.

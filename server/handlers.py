@@ -462,14 +462,25 @@ mappings = {
 'vp':	lambda tr: render_model_real(tr, labels['vp'], panel_plot_options[:1]),
 'vpi':	lambda tr: render_model_real(tr, labels['vp'], panel_plot_options[:1]),
 'qp':	lambda tr: render_model_real(tr, labels['qp'], panel_plot_options[1:2]),
-#'gvp':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
-'gvp':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
+
+# Version that shows real and imaginary components of the gradient
+'gvp':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
+
+# Version that shows phase and log amplitude of the gradient
+#'gvp':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
+
 # Could make these distinct
 #'gvpr':	lambda tr: render_wavefield_complex(tr, labels['field']),
 #'gvpf':	lambda tr: render_wavefield_complex(tr, labels['field']),
 #'gvpt':	lambda tr: render_wavefield_complex(tr, labels['field']),
 #'gvpO':	lambda tr: render_wavefield_complex(tr, labels['field']),
-'wave':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
+
+# Version that shows real and imaginary components of the wavefield
+#'wave':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
+
+# Version that shows phase and log amplitude of the gradient
+'wave':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
+
 #	'bwav':	lambda tr: render_wavefield_complex(tr, labels['field']),
 'src':	lambda tr: render_source(tr, labels['src'], trace_plot_options[0:2]+panel_plot_options[2:3]),
 'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[1:3]),

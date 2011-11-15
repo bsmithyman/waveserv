@@ -427,6 +427,7 @@ def render_utest (traces, figlabels, plotopts):
 # ------------------------------------------------------------------------
 # Mappings from file renderers to regular expression entries
 
+# These values are used to label certain classes of plots 
 labels = {
 	'vp':		{	'cb':	'Velocity (m/s)'},
 	'vpi':		{	'cb':	'Imag Velocity (m/s)'},
@@ -442,6 +443,8 @@ labels = {
 				'vel':	'Velocity Perturbation (m/s)'}
 }
 
+# Maps a given file-type key to the function that handles it.  Each function
+# takes the filename as an input and returns a result for further processing.
 ftypes = {
 	'vp':		get_segy_real,
 	'vpi':		get_segy_real,
@@ -458,6 +461,9 @@ ftypes = {
 	'ilog':		get_ilog,
 }
 
+# Maps a given file-type key to the function that renders it.  Each function
+# takes data (from the functions indexed by "ftypes") as an argument, as well
+# as objects containing label text and plotting options.
 mappings = {
 'vp':	lambda tr: render_model_real(tr, labels['vp'], panel_plot_options[:1]),
 'vpi':	lambda tr: render_model_real(tr, labels['vp'], panel_plot_options[:1]),
@@ -488,9 +494,34 @@ mappings = {
 }
 
 # ------------------------------------------------------------------------
-# Function that dispatches requests to the renders
 
 def handle (filename):
+  '''
+  Function that dispatches requests to the renderers.
+  When a filename is passed to the handle(...) function, it attempts to find
+  a match for that filename among the dict of authoritative regular-expressions
+  stored in redict_auth.
+
+  Unlike in the index page view, in most cases there will always be a match for
+  the filename in question (since the natural way to reach this function is
+  via a valid link from the index page).
+
+  The filename is matched against the dictionary of regex parsers, and if there
+  is a match, it is fed through the "ftypes" dictionary (which indexes file-
+  handling functions).  Presuming that the file is valid, a result will be
+  returned, named "traces" (in fact, this is sometimes a more complex object,
+  depending on the exact filetype).
+
+  The data is then passed to one of the functions indexed by the "mappings"
+  dictionary, based on the filetype regex above.  This (if successful) returns
+  a matplotlib figure object, which is in turn used to initialize a
+  FigureCanvas object.  The FigureCanvas object is responsible for rendering
+  the figure as a PNG image.
+
+  The PNG image is cropped to remove whitespace (or whatever background colour
+  is set at the beginning of this source file), and the PNG image is returned
+  to the calling function (viz., the render view).
+  '''
 
   for key, value in redict_auth.iteritems():
     matchresult = value[2].match(filename)

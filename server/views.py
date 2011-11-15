@@ -59,6 +59,9 @@ def view_index (request):
   if ('SortKey' in r):
     sortby = r['SortKey']
     s['SortKey'] = sortby
+    # This can be uncommented to make things slightly prettier, but at present
+    # needs to be commented for the category anchors to work when the filter
+    # links are clicked.
     #return redirect('index')
   elif ('SortKey' in s):
     sortby = s['SortKey']

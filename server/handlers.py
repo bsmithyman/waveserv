@@ -1,19 +1,29 @@
 import re
 import os
-from pygeo.segyread import SEGYFile
 import numpy as np
+
+# SEG-Y library
+from pygeo.segyread import SEGYFile
+
+# Image manipulation
 import Image, ImageChops
+
+# Plotting
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.cm
 
+# Database entries that are created on execution of the "waveserv" wrapper
 from server.models import Project
 project = Project.objects.all()[0]
 
 DEBUG = project.debug
 VERBOSE = project.verbose
 
+# Default options for SEG-Y
 endian = 'Big'
+
+# Default options for plotting
 dpi = 100
 figopts = {
 	'facecolor':	'w',
@@ -25,6 +35,7 @@ figopts_data = {
 }
 
 
+# Colour map settings for 2-D plots (i.e., with imshow)
 panel_plot_options = [{
 	'cmap': matplotlib.cm.jet,
 },{
@@ -33,6 +44,7 @@ panel_plot_options = [{
 	'cmap': matplotlib.cm.gray,
 }]
 
+# Colour and style settings for 1-D plots (i.e., with plot and fill_between)
 trace_plot_options = [{
 	'color': 'b',
 },{
@@ -43,6 +55,8 @@ trace_plot_options = [{
 	'color': 'g',
 }]
 
+# Colour of the background to be removed automatically
+# (enables cropping of the figure canvas)
 autocropcolour = (255,255,255)
 
 # ------------------------------------------------------------------------
@@ -52,6 +66,11 @@ def swap (trace):
   return [trace, np.arange(len(trace))]
 
 def spectral_ap (traces):
+  '''
+  Returns the amplitude and phase of a set of data, given arrays corresponding
+  to the real and imaginary components.
+  '''
+
   [real, imag] = traces
 
   amp = np.sqrt(real**2 + imag**2)
@@ -62,9 +81,11 @@ def spectral_ap (traces):
 def auto_crop(im):
   '''
   Automatic PIL cropping from "Kevin Smith" on www.gossamer-threads.com
+  Takes a background colour option (set at the top of the file), and crops
+  the image canvas to get rid of excess.
   '''
 
-  if im.mode != "RGB":
+  if (im.mode != "RGB"):
     im = im.convert("RGB")
   bg = Image.new("RGB", im.size, autocropcolour)
   diff = ImageChops.difference(im, bg)
@@ -77,15 +98,23 @@ def auto_crop(im):
 # File access functions
 
 def get_ilog (filename):
+  '''
+  Parses log files from FULLWV and returns information about the objective
+  function (absolute value, relative reduction, +/- perturbation) for each
+  iteration.
+  '''
+
   f = open(filename)
   lines = f.readlines()
   f.close()
 
+  # Do the actual parsing
   objective = np.array([float(line.strip().split()[2]) for line in lines if line.find('Objective function:') != -1])
   relative = np.array([float(line.strip().split()[5]) for line in lines if line.find('Relative') != -1])
   minpert = np.array([float(line.strip().split()[-1]) for line in lines if line.find('max(gvp)') != -1])
   maxpert = np.array([float(line.strip().split()[-1]) for line in lines if line.find('min(gvp)') != -1])
 
+  # Form a dictionary containing the results
   logdict = {	'objective':	objective,
 		'relative':	relative,
 		'minpert':	minpert,
@@ -95,18 +124,33 @@ def get_ilog (filename):
   return logdict
 
 def get_segy_time (filename):
+  '''
+  Reads a SEG-Y file and returns all traces, as well as the sample rate
+  (read from the binary header).
+  '''
+
   sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   traces = sf.readTraces()
 
   return [traces, sf.bhead['hdt']]
 
 def get_segy_real (filename):
+  '''
+  Reads a SEG-Y file and returns all traces without additional metadata.
+  '''
+
   sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   traces = sf.readTraces()
 
   return traces
 
 def get_segy_complex (filename):
+  '''
+  Reads a SEG-Y file and returns all traces without additional metadata.
+  The traces are split into two separate arrays, one each for the real and
+  imaginary components of the data.
+  '''
+
   sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   real = sf.readTraces(sf.findTraces('trid',1001,1001))
   imag = sf.readTraces(sf.findTraces('trid',1002,1002))
@@ -114,8 +158,14 @@ def get_segy_complex (filename):
   return [real, imag]
 
 # ------------------------------------------------------------------------
-# Regular expressions for parsing file types
+
 def compile_to_dict (exprdict):
+  '''
+  Given a dictionary of regular expressions in text form, assembles a
+  corresponding dictionary of pre-compiled objects that can be used to
+  efficiently parse filenames.
+  '''
+
   # Form a dictionary to contain the regular expression objects
   redict = {}
   for key, value in exprdict.iteritems():
@@ -130,12 +180,19 @@ def compile_to_dict (exprdict):
 
   return redict
 
+# Expressions that match general classes of files
+# ALL:  Everything except for certain files that should be excluded
+# PROJ: Everything that starts with the project name
 expressions_meta = {
 	'ALL':	[-2,'All','^[^(graph)][^(reorder)].*[^(\.db)]$'],
         'PROJ':	[-1,'Project','^%s.*'],
 }
 redict_meta = compile_to_dict(expressions_meta)
 
+# Expressions that should be mutually exclusive
+# These regular expressions are used to determine the class of a given file,
+# so that it can be classified correctly in a list or plotted/represented
+# correctly in a rendering.
 expressions_authoritative = {
 'ilog':		[0,'Log','^fullwv\.log.*$'],
 'vp':		[1,'Velocity','^%s(?P<iter>[0-9]*)\.vp(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
@@ -157,12 +214,16 @@ expressions_authoritative = {
 }
 redict_auth = compile_to_dict(expressions_authoritative)
 
+# An overarching dictionary is created based on the contents of the meta and
+# authoritative dictionaries.
 redict = {}
 redict.update(redict_meta)
 redict.update(redict_auth)
 
 # ------------------------------------------------------------------------
 # Figure defines
+# Sets the bounding box for certain classes of 2-D figures based on the
+# model dimensions.
 figextent = (	project.xorig,
 		project.xorig + project.dx*project.nx,
 		project.zorig + project.dz*project.nz,
@@ -172,6 +233,10 @@ figextent = (	project.xorig,
 # File renderers
 
 def render_ilog (logdict, figlabels, plotopts):
+  '''
+  Renders a 2-D plot of some input data.
+  viz. log-scaled amplitude of a semblance panel
+  '''
 
   fig = Figure(**figopts)
 
@@ -197,6 +262,12 @@ def render_ilog (logdict, figlabels, plotopts):
   return fig
 
 def render_source (info, figlabels, plotopts):
+  '''
+  Renders a 2-D plot of all source-signatures, along with a 1-D plot showing:
+   - the average of the traces, subsequently normalized
+   - the normalized traces, subsequently averaged
+  '''
+
   [traces, dt] = info
 
   fig = Figure(**figopts)
@@ -238,6 +309,10 @@ def render_source (info, figlabels, plotopts):
   return fig
 
 def render_model_real (traces, figlabels, plotopts):
+  '''
+  Renders a 2-D plot of a set of real values with the dimensions of the model.
+  viz. the velocity model, the 1/Q model
+  '''
 
   if (traces.shape[0] > traces.shape[1]):
     figmode = 'horizontal'
@@ -254,6 +329,12 @@ def render_model_real (traces, figlabels, plotopts):
   return fig
 
 def render_wavefield_complex (traces, figlabels, plotopts):
+  '''
+  Renders two 2-D plots, representing the real and imaginary components of a
+  wavefield with the dimensions of the model.
+  viz. the gradient, forward- or backword-propagated wavefield
+  '''
+
   [real, imag] = traces
 
   if (real.shape[0] > real.shape[1]):
@@ -283,7 +364,49 @@ def render_wavefield_complex (traces, figlabels, plotopts):
 
   return fig
 
+def render_wavefield_complex_ap (traces, figlabels, plotopts):
+  '''
+  Renders two 2-D plots, representing the log amplitude and phase of a
+  wavefield with the dimensions of the model.
+  viz. the gradient, forward- or backword-propagated wavefield
+  '''
+
+  [amp, phase] = spectral_ap(traces)
+  logamp = np.log10(amp)
+
+  if (logamp.shape[0] > logamp.shape[1]):
+    figmode = 'horizontal'
+  else:
+    figmode = 'vertical'
+
+  fig = Figure(**figopts)
+
+  if (figmode == 'horizontal'):
+    ax = fig.add_subplot(2,1,1)
+  else:
+    ax = fig.add_subplot(1,2,1)
+  ax.set_title('Phase')
+  im = ax.imshow(phase.T, extent=figextent, **plotopts[1])
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
+  cb.set_label(figlabels['cb'])
+
+  if (figmode == 'horizontal'):
+    ax = fig.add_subplot(2,1,2)
+  else:
+    ax = fig.add_subplot(1,2,2)
+  ax.set_title('log Amplitude')
+  im = ax.imshow(logamp.T, extent=figextent, **plotopts[0])
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
+  cb.set_label(figlabels['cb'])
+
+  return fig
+
 def render_utest (traces, figlabels, plotopts):
+  '''
+  Renders two 2-D plots, representing the phase and log-amplitude of a
+  frequency-domain data file.
+  viz. utest, utobs, etc.
+  '''
   [amp, phase] = spectral_ap(traces)
   logamp = np.log10(amp)
 
@@ -294,7 +417,7 @@ def render_utest (traces, figlabels, plotopts):
   im = ax.imshow(phase.T, aspect='auto', **plotopts[1])
 
   ax = fig.add_subplot(2,1,2)
-  ax.set_title('Amplitude')
+  ax.set_title('log Amplitude')
   im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['cb'])
@@ -339,7 +462,8 @@ mappings = {
 'vp':	lambda tr: render_model_real(tr, labels['vp'], panel_plot_options[:1]),
 'vpi':	lambda tr: render_model_real(tr, labels['vp'], panel_plot_options[:1]),
 'qp':	lambda tr: render_model_real(tr, labels['qp'], panel_plot_options[1:2]),
-'gvp':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
+#'gvp':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
+'gvp':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
 # Could make these distinct
 #'gvpr':	lambda tr: render_wavefield_complex(tr, labels['field']),
 #'gvpf':	lambda tr: render_wavefield_complex(tr, labels['field']),

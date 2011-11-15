@@ -291,8 +291,8 @@ def view_render (request, filename):
     # Try to render a response directly from the file buffer, rather than
     # going to the source file. This is usually much quicker and more efficient.
     try:
-      with open(rr.diskbuffer, 'rb') as fp:
-        response = HttpResponse(fp, mimetype='image/png')
+      fp = open(rr.diskbuffer, 'rb')
+      response = HttpResponse(fp, mimetype='image/png')
     except:
       print('Cache miss on rendering %s; stop clicking [Refresh].'%filename)
       raise

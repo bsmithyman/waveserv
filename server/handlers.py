@@ -195,7 +195,7 @@ redict_meta = compile_to_dict(expressions_meta)
 # correctly in a rendering.
 expressions_authoritative = {
 'ilog':		[0,'Log','^fullwv\.log.*$'],
-'vp':		[1,'Velocity','^%s(?P<iter>[0-9]*)\.vp(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
+'vp':		[1,'Velocity','^%s(?P<iter>[0-9]*)\.vp(?P<freq>[0-9]*\.?[0-9]+)?[^i]*$'],
 'qp':		[2,'Attenuation','^%s(?P<iter>[0-9]*)\.qp(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
 'vpi':		[3,'iVelocity','^%s(?P<iter>[0-9]*)\.vpi(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
 'src':		[4,'Source','^%s\.(new)?src$'],

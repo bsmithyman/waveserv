@@ -55,9 +55,8 @@ def view_index (request):
   s = request.session
   r = request.REQUEST
   if ('SortKey' in r):
-    sortby = r['SortKey']
-    s['SortKey'] = sortby
-    #return redirect('index')
+    s['SortKey'] = r['SortKey']
+    return redirect('index')
   elif ('SortKey' in s):
     sortby = s['SortKey']
   else:

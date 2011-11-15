@@ -5,7 +5,7 @@
 
 {% for matchclass in matchlist|dictsort:"id" %}
   {% if matchclass.result|length != 0 %}
-    <a name="{{ matchsclass.description }}"><h3>{{ matchclass.description }} Files</h3></a>
+    <h3>{{ matchclass.description }} Files</h3>
     <table class="fullwidthtable">
       <tr>
         <th>

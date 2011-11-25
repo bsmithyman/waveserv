@@ -194,7 +194,7 @@ redict_meta = compile_to_dict(expressions_meta)
 # so that it can be classified correctly in a list or plotted/represented
 # correctly in a rendering.
 expressions_authoritative = {
-'ilog':		[0,'Log','^fullwv\.log.*$'],
+'ilog':		[0,'Log','^.*\.log.*$'],
 'vp':		[1,'Velocity','^%s(?P<iter>[0-9]*)\.vp(?P<freq>[0-9]*\.?[0-9]+)?[^i]*$'],
 'qp':		[2,'Attenuation','^%s(?P<iter>[0-9]*)\.qp(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
 'vpi':		[3,'iVelocity','^%s(?P<iter>[0-9]*)\.vpi(?P<freq>[0-9]*\.?[0-9]+)?.*$'],

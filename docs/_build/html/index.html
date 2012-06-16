@@ -3,16 +3,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to waveserv’s documentation! &mdash; waveserv devel documentation</title>
-    
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <title>Introduction &mdash; waveserv vdevel documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -25,29 +23,52 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="waveserv devel documentation" href="#" /> 
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="waveserv vdevel documentation" href="#" />
+    <link rel="next" title="Installation" href="installation.html" /> 
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="#">waveserv devel documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+      <div class="header"><h1 class="heading"><a href="#">
+          <span>waveserv vdevel documentation</span></a></h1>
+        <h2 class="heading"><span>Introduction</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        <a class="uplink" href="#">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="installation.html">Installation</a>&#160;&#160;»
+        </p>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
-  <div class="section" id="welcome-to-waveserv-s-documentation">
-<h1>Welcome to waveserv&#8217;s documentation!<a class="headerlink" href="#welcome-to-waveserv-s-documentation" title="Permalink to this headline">¶</a></h1>
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="introduction">
+<span id="intro"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>The <strong class="program">waveserv</strong> program provides a web-based interface designed to simplify monitoring <a class="reference external" href="http://orion.es.uwo.ca/index.php/FULLWV">FULLWV</a> and <a class="reference external" href="http://orion.es.uwo.ca/index.php/OMEGA">OMEGA</a>.  It is specifically designed for use with this software, but is open-source and may be modified or reused freely.  While <strong class="program">waveserv</strong> is less capable than a full seismic processing suite, it is compatible with a wide variety of devices and web browsers.  It also takes advantage of compression and advanced web techniques to make it very easy to monitor your server/cluster/workstation over a slow Internet connection.</p>
+<p>The command-line program <strong class="program">waveserv</strong> indexes all of the relevant files in the OMEGA/FULLWV project directory and provides them to the web browser of your choice.  This could (by default) be a browser on the same computer, or it could be a browser running on a computer half way around the world.  The interface is lightweight, and works fine on laptops, workstations, phones and tablets.  The server interface has been tested on Mac OS X and Linux, but will most likely work on any machine with a functional Python environment.  It is based on the development web server from the <a class="reference external" href="http://www.djangoproject.com/">Django Project</a>.</p>
+<p>This package is licensed under the <a class="reference external" href="http://www.opensource.org/licenses/BSD-3-Clause">BSD License</a> (see project source for details).</p>
+<p>The <strong class="program">waveserv</strong> package also makes use of the <tt class="xref py py-mod docutils literal"><span class="pre">pygeo</span></tt> Python module, and in particular the <tt class="xref py py-mod docutils literal"><span class="pre">pygeo.fullpy</span></tt> interface for reading <em>projnm.ini</em> files and <tt class="xref py py-mod docutils literal"><span class="pre">pygeo.segyread.SEGYFile</span></tt> interface for reading the SEG-Y format datafiles used by OMEGA/FULLWV.  <tt class="xref py py-mod docutils literal"><span class="pre">pygeo</span></tt> is released under the <a class="reference external" href="http://www.opensource.org/licenses/lgpl-3.0.html">GNU Lesser General Public License</a>.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#custom-libraries">Custom Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#generic-libraries">Generic Libraries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Graphical User Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#main-executable">Main Executable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#server-code">Server Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#media-and-templates">Media and Templates</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -61,53 +82,20 @@
 </div>
 
 
-          </div>
-        </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Welcome to waveserv&#8217;s documentation!</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
+      <div class="bottomnav">
+      
+        <p>
+        <a class="uplink" href="#">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="installation.html">Installation</a>&#160;&#160;»
+        </p>
 
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="#">waveserv devel documentation</a> &raquo;</li> 
-      </ul>
-    </div>
+
     <div class="footer">
         &copy; Copyright 2012, Brendan Smithyman.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

@@ -152,8 +152,8 @@ def get_segy_complex (filename):
   '''
 
   sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
-  real = sf.readTraces(sf.findTraces('trid',1001,1001))
-  imag = sf.readTraces(sf.findTraces('trid',1002,1002))
+  real = sf[::2]#sf.readTraces(sf.findTraces('trid',1001,1001))
+  imag = sf[1::2]#sf.readTraces(sf.findTraces('trid',1002,1002))
 
   return [real, imag]
 
@@ -194,7 +194,7 @@ redict_meta = compile_to_dict(expressions_meta)
 # so that it can be classified correctly in a list or plotted/represented
 # correctly in a rendering.
 expressions_authoritative = {
-'ilog':		[0,'Log','^fullwv\.log.*$'],
+'ilog':		[0,'Log','^.*\.log.*$'],
 'vp':		[1,'Velocity','^%s(?P<iter>[0-9]*)\.vp(?P<freq>[0-9]*\.?[0-9]+)?[^i]*$'],
 'qp':		[2,'Attenuation','^%s(?P<iter>[0-9]*)\.qp(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
 'vpi':		[3,'iVelocity','^%s(?P<iter>[0-9]*)\.vpi(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
@@ -415,12 +415,14 @@ def render_utest (traces, figlabels, plotopts):
   ax = fig.add_subplot(2,1,1)
   ax.set_title('Phase')
   im = ax.imshow(phase.T, aspect='auto', **plotopts[1])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['pcb'])
 
   ax = fig.add_subplot(2,1,2)
   ax.set_title('log Amplitude')
   im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
-  cb.set_label(figlabels['cb'])
+  cb.set_label(figlabels['lcb'])
 
   return fig
 
@@ -436,7 +438,8 @@ labels = {
 	'src':		{	'cb':	'Amplitude',
 				'y':	'Time (ms)',
 				'x2':	'Source No.'},
-	'utest':	{	'cb':	'Log Amplitude'},
+	'utest':	{	'lcb':	'Log Amplitude',
+				'pcb':	'Phase'},
 	'ilog':		{	'x':	'Iteration',
 				'obj':	'Objective Function',
 				'rel':	'Relative Reduction',

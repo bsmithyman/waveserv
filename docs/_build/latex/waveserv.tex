@@ -9,11 +9,12 @@
 \usepackage[Bjarne]{fncychap}
 \usepackage{longtable}
 \usepackage{sphinx}
+\usepackage{multirow}
 
 
 \title{waveserv Documentation}
-\date{June 15, 2012}
-\release{devel}
+\date{June 18, 2012}
+\release{1.2}
 \author{Brendan Smithyman}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -128,7 +129,7 @@ Contents:
 \label{installation:introduction}\label{installation:installation}\label{installation:intro}\label{installation::doc}\label{installation:id1}
 \textbf{waveserv} can be accessed via \href{http://subversion.apache.org/}{Subversion} using the following command:
 
-\begin{Verbatim}[commandchars=@\[\]]
+\begin{Verbatim}[commandchars=\\\{\}]
 svn co https://skylab.bitsmithy.net/svn/public/waveserv/trunk waveserv-base
 \end{Verbatim}
 
@@ -137,7 +138,7 @@ This checks out the program source code into a directory called \textbf{waveserv
 \begin{notice}{note}{Note:}
 The \emph{trunk} should always be (more or less) functional, but likely does not include the most up-to-date developments.  For the development version, issue:
 
-\begin{Verbatim}[commandchars=@\[\]]
+\begin{Verbatim}[commandchars=\\\{\}]
 svn co https://skylab.bitsmithy.net/svn/public/waveserv/branches/devel waveserv-devel
 \end{Verbatim}
 
@@ -146,14 +147,14 @@ However, note that the development version is not guaranteed to do anything othe
 
 In order to make \textbf{waveserv} available system-wide, you need to add the \textbf{waveserv-base} directory to the system search path.  For users of \textbf{bash} (Mac OS and Linux default in most cases), add the following to your \emph{\textasciitilde{}/.bash\_profile} or \emph{\textasciitilde{}/.bashrc} file:
 
-\begin{Verbatim}[commandchars=@\[\]]
-export PATH="/path/to/waveserv-base:@$PATH"
+\begin{Verbatim}[commandchars=\\\{\}]
+export PATH="/path/to/waveserv-base:\$PATH"
 \end{Verbatim}
 
 For users of \textbf{csh}, add the following to your \emph{\textasciitilde{}/.cshrc} file:
 
-\begin{Verbatim}[commandchars=@\[\]]
-setenv PATH "/path/to/waveserv-base:@$PATH"
+\begin{Verbatim}[commandchars=\\\{\}]
+setenv PATH "/path/to/waveserv-base:\$PATH"
 \end{Verbatim}
 
 
@@ -161,15 +162,15 @@ setenv PATH "/path/to/waveserv-base:@$PATH"
 \label{installation:custom-libraries}
 \textbf{waveserv} requires the \code{pygeo} Python module in order to run.  To get a copy, issue the command:
 
-\begin{Verbatim}[commandchars=@\[\]]
+\begin{Verbatim}[commandchars=\\\{\}]
 svn co https://skylab.bitsmithy.net/svn/public/pygeo/trunk pygeo-base
 \end{Verbatim}
 
 Place the directory \emph{pygeo-base} on your Python search path; in \textbf{bash}, this would look something like:
 
-\begin{Verbatim}[commandchars=@\[\]]
-if @PYGZlb[] -n "@$PYTHONPATH" @PYGZrb[]; then
-  export PYTHONPATH="/path/to/pygeo-base:@$PYTHONPATH"
+\begin{Verbatim}[commandchars=\\\{\}]
+if [ -n "\$PYTHONPATH" ]; then
+  export PYTHONPATH="/path/to/pygeo-base:\$PYTHONPATH"
 else
   export PYTHONPATH="/path/to/pygeo-base"
 fi
@@ -188,37 +189,35 @@ Package
 Description
 } & \textbf{
 Minimum Version
-}\\
-\hline
+}\\\hline
 
 python
  & 
 Python Interpreter
  & 
 Tested with 2.6+
-\\
+\\\hline
 
 python-numpy
  & 
 Numerical Python
  & 
 Untested
-\\
+\\\hline
 
 python-django
  & 
 Django Web Framework
  & 
 1.2
-\\
+\\\hline
 
 python-matplotlib
  & 
 Matlab-like plotting environment
  & 
 Untested
-\\
-\hline
+\\\hline
 \end{tabulary}
 
 
@@ -237,8 +236,8 @@ You may run \textbf{waveserv} by navigating to the directory containing FULLWV/O
 
 Access the {\hyperref[gui:gui]{\emph{Graphical User Interface}}} by pointing a web browser at \href{http://localhost:1503/}{http://localhost:1503/} (by default), or use the command-line interface to change the port (``waveserv --help'').  If the server is not running on the local machine (i.e., your web browser is not on the machine that OMEGA/FULLWV runs on), you can specify the bind address as something other than \textbf{127.0.0.1}.  This is a potential security issue, so in most cases it is better to use VPN (Virtual Private Networking, e.g., \href{http://openvpn.net/}{OpenVPN}) or SSH-tunnel methods to access it from the local machine.  To set up a SSH tunnel, issue the following command on the machine running the web browser:
 
-\begin{Verbatim}[commandchars=@\[\]]
-ssh -f -N -L 1503:localhost:1503 @PYGZlb[]remotehost@PYGZrb[]
+\begin{Verbatim}[commandchars=\\\{\}]
+ssh -f -N -L 1503:localhost:1503 [remotehost]
 \end{Verbatim}
 
 In this case, connect to the address \href{http://localhost:1503/}{http://localhost:1503/} as if you were running \textbf{waveserv} on the same computer.
@@ -246,69 +245,57 @@ In this case, connect to the address \href{http://localhost:1503/}{http://localh
 \centering
 \capstart
 
-\includegraphics{startcmd9.png}
+\includegraphics{startcmd.png}
 \caption{Example execution of \textbf{waveserv}, for a project named \emph{line05}.}\end{figure}
-
-\begin{notice}{warning}{Warning:}
-\textbf{waveserv} is based on the \href{http://www.djangoproject.com/}{Django} test web server.  This is designed for development use, and is not recommended for use on public networks (viz., the Internet).  \href{http://www.djangoproject.com/}{Django} is a popular project, and its vulnerabilities may be well-known; \textbf{waveserv} is susceptible to the same issues.  By default, \textbf{waveserv} is only accessible from the local computer, and so is only accessible to other users with accounts on the server/workstation.  The \emph{\texttt{-b}} option should only be used on a secure network.
-\end{notice}
 
 
 \section{Options}
-\label{cli:options}
-\indexii{waveserv command line option}{--version}
+\label{cli:options}\index{waveserv command line option!--version}\index{--version!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv--version}\pysigline{\bfcode{--version}\code{}}{}\pysigline{\bfcode{show~program~version~number~and~exit}}{}
+\phantomsection\label{cli:cmdoption-waveserv--version}\pysigline{\bfcode{--version}\code{}}\pysigline{\bfcode{show~program~version~number~and~exit}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-h, --help}
+\index{waveserv command line option!-h, --help}\index{-h, --help!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-h}\pysigline{\bfcode{-h}\code{}\code{,~}\bfcode{--help}\code{}}{}\pysigline{\bfcode{show~a~help~message~and~exit}}{}
+\phantomsection\label{cli:cmdoption-waveserv-h}\pysigline{\bfcode{-h}\code{}\code{,~}\bfcode{--help}\code{}}\pysigline{\bfcode{show~a~help~message~and~exit}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-v, --verbose}
+\index{waveserv command line option!-v, --verbose}\index{-v, --verbose!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-v}\pysigline{\bfcode{-v}\code{}\code{,~}\bfcode{--verbose}\code{}}{}\pysigline{\bfcode{display~additional~information}}{}
+\phantomsection\label{cli:cmdoption-waveserv-v}\pysigline{\bfcode{-v}\code{}\code{,~}\bfcode{--verbose}\code{}}\pysigline{\bfcode{display~additional~information}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-b ADDR, --bind=ADDR}
+\index{waveserv command line option!-b ADDR, --bind=ADDR}\index{-b ADDR, --bind=ADDR!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-b}\pysigline{\bfcode{-b}\code{~ADDR}\code{,~}\bfcode{--bind}\code{=ADDR}}{}\pysigline{\bfcode{server~address~to~bind~{[}Default:~127.0.0.1:1503{]}}}{}
+\phantomsection\label{cli:cmdoption-waveserv-b}\pysigline{\bfcode{-b}\code{~ADDR}\code{,~}\bfcode{--bind}\code{=ADDR}}\pysigline{\bfcode{server~address~to~bind~{[}Default:~127.0.0.1:1503{]}}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-d FILE, --db=FILE}
+\index{waveserv command line option!-d FILE, --db=FILE}\index{-d FILE, --db=FILE!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-d}\pysigline{\bfcode{-d}\code{~FILE}\code{,~}\bfcode{--db}\code{=FILE}}{}\pysigline{\bfcode{filename~for~server~database~{[}Default:~.waveserv.db{]}}}{}
+\phantomsection\label{cli:cmdoption-waveserv-d}\pysigline{\bfcode{-d}\code{~FILE}\code{,~}\bfcode{--db}\code{=FILE}}\pysigline{\bfcode{filename~for~server~database~{[}Default:~.waveserv.db{]}}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-g, --serverdebug}
+\index{waveserv command line option!-g, --serverdebug}\index{-g, --serverdebug!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-g}\pysigline{\bfcode{-g}\code{}\code{,~}\bfcode{--serverdebug}\code{}}{}\pysigline{\bfcode{enable~debugging~for~web~server}}{}
+\phantomsection\label{cli:cmdoption-waveserv-g}\pysigline{\bfcode{-g}\code{}\code{,~}\bfcode{--serverdebug}\code{}}\pysigline{\bfcode{enable~debugging~for~web~server}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-k, --keep}
+\index{waveserv command line option!-k, --keep}\index{-k, --keep!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-k}\pysigline{\bfcode{-k}\code{}\code{,~}\bfcode{--keep}\code{}}{}\pysigline{\bfcode{keep~temporary~files~on~exit~{[}Default:~False{]}}}{}
+\phantomsection\label{cli:cmdoption-waveserv-k}\pysigline{\bfcode{-k}\code{}\code{,~}\bfcode{--keep}\code{}}\pysigline{\bfcode{keep~temporary~files~on~exit~{[}Default:~False{]}}}
 \end{fulllineitems}
 
-
-\indexii{waveserv command line option}{-p DIBUPATH, --dibupath=DIBUPATH}
+\index{waveserv command line option!-p DIBUPATH, --dibupath=DIBUPATH}\index{-p DIBUPATH, --dibupath=DIBUPATH!waveserv command line option}
 
 \begin{fulllineitems}
-\phantomsection\label{cli:cmdoption-waveserv-p}\pysigline{\bfcode{-p}\code{~DIBUPATH}\code{,~}\bfcode{--dibupath}\code{=DIBUPATH}}{}\pysigline{\bfcode{path~for~temporary~image~files~{[}Default:~.buffer{]}}}{}
+\phantomsection\label{cli:cmdoption-waveserv-p}\pysigline{\bfcode{-p}\code{~DIBUPATH}\code{,~}\bfcode{--dibupath}\code{=DIBUPATH}}\pysigline{\bfcode{path~for~temporary~image~files~{[}Default:~.buffer{]}}}
 \end{fulllineitems}
 
 
@@ -322,7 +309,7 @@ With the \textbf{waveserv} server running, navigate to \href{http://localhost:15
 \centering
 \capstart
 
-\includegraphics{listing4.png}
+\includegraphics{listing.png}
 \caption{Directory listing rendered by \textbf{waveserv}.}\end{figure}
 
 Each type of file is grouped under a descriptive heading, and the entries under each heading are sorted.  Several pieces of information are available for each entry, including the \emph{filename}, \emph{size}, and \emph{modification time}.  Additionally, for files that correspond to a particular \emph{frequency} or \emph{iteration}, this information is extracted from the filename.  Each of these headings can be used as a sort key; simply click the corresponding check box (beside the column heading) to change the sort key.  The current sort key is indicated by a box that is coloured differently from the others.
@@ -332,7 +319,7 @@ Each entry has two buttons, labelled \emph{Show} and \emph{Get}.  Clicking the \
 \centering
 \capstart
 
-\includegraphics{qpmodel1.png}
+\includegraphics{qpmodel.png}
 \caption{Example plot for an attenuation (1/Q) model, for the project \emph{line05}.}\end{figure}
 
 

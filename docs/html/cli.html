@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Command Line Interface &mdash; waveserv vdevel documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     'devel',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="waveserv vdevel documentation" href="index.html" />
+    <link rel="next" title="Graphical User Interface" href="gui.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>waveserv vdevel documentation</span></a></h1>
+        <h2 class="heading"><span>Command Line Interface</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="installation.html">Installation</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="gui.html">Graphical User Interface</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="command-line-interface">
+<span id="cli"></span><h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
+<p>The <strong class="program">waveserv</strong> CLI is a Python program that loads up a specially modified web server.  However, instead of hosting a web site, this interface looks for <a class="reference external" href="http://orion.es.uwo.ca/index.php/Waveform_Tomography">Waveform Tomography</a> project files and generates an interactive listing.</p>
+<p>You may run <strong class="program">waveserv</strong> by navigating to the directory containing FULLWV/OMEGA files and typing <strong class="command">waveserv [projnm]</strong>, where <strong>[projnm]</strong> is the name associated with the <strong>*.ini</strong> file.  It can also auto-detect this if there is only one project in the directory, but this fails (for example) during inversion because of the generation of <strong>tmp.*</strong> files.</p>
+<p>Access the <a class="reference internal" href="gui.html#gui"><em>Graphical User Interface</em></a> by pointing a web browser at <a class="reference external" href="http://localhost:1503/">http://localhost:1503/</a> (by default), or use the command-line interface to change the port (&#8220;waveserv &#8211;help&#8221;).  If the server is not running on the local machine (i.e., your web browser is not on the machine that OMEGA/FULLWV runs on), you can specify the bind address as something other than <strong>127.0.0.1</strong>.  This is a potential security issue, so in most cases it is better to use VPN (Virtual Private Networking, e.g., <a class="reference external" href="http://openvpn.net/">OpenVPN</a>) or SSH-tunnel methods to access it from the local machine.  To set up a SSH tunnel, issue the following command on the machine running the web browser:</p>
+<div class="highlight-python"><pre>ssh -f -N -L 1503:localhost:1503 [remotehost]</pre>
+</div>
+<p>In this case, connect to the address <a class="reference external" href="http://localhost:1503/">http://localhost:1503/</a> as if you were running <strong class="program">waveserv</strong> on the same computer.</p>
+<div class="figure">
+<img alt="_images/startcmd9.png" src="_images/startcmd9.png" />
+<p class="caption">Example execution of <strong class="program">waveserv</strong>, for a project named <em>line05</em>.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><strong class="program">waveserv</strong> is based on the <a class="reference external" href="http://www.djangoproject.com/">Django</a> test web server.  This is designed for development use, and is not recommended for use on public networks (viz., the Internet).  <a class="reference external" href="http://www.djangoproject.com/">Django</a> is a popular project, and its vulnerabilities may be well-known; <strong class="program">waveserv</strong> is susceptible to the same issues.  By default, <strong class="program">waveserv</strong> is only accessible from the local computer, and so is only accessible to other users with accounts on the server/workstation.  The <em class="xref std std-option">-b</em> option should only be used on a secure network.</p>
+</div>
+<div class="section" id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<dl class="option">
+<dt id="cmdoption-waveserv--version">
+<tt class="descname">--version</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-waveserv--version" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">show program version number and exit</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-h">
+<tt class="descname">-h</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-waveserv-h" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">show a help message and exit</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-v">
+<tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--verbose</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-waveserv-v" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">display additional information</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-b">
+<tt class="descname">-b</tt><tt class="descclassname"> ADDR</tt><tt class="descclassname">, </tt><tt class="descname">--bind</tt><tt class="descclassname">=ADDR</tt><a class="headerlink" href="#cmdoption-waveserv-b" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">server address to bind [Default: 127.0.0.1:1503]</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-d">
+<tt class="descname">-d</tt><tt class="descclassname"> FILE</tt><tt class="descclassname">, </tt><tt class="descname">--db</tt><tt class="descclassname">=FILE</tt><a class="headerlink" href="#cmdoption-waveserv-d" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">filename for server database [Default: .waveserv.db]</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-g">
+<tt class="descname">-g</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--serverdebug</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-waveserv-g" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">enable debugging for web server</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-k">
+<tt class="descname">-k</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--keep</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-waveserv-k" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">keep temporary files on exit [Default: False]</tt></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-waveserv-p">
+<tt class="descname">-p</tt><tt class="descclassname"> DIBUPATH</tt><tt class="descclassname">, </tt><tt class="descname">--dibupath</tt><tt class="descclassname">=DIBUPATH</tt><a class="headerlink" href="#cmdoption-waveserv-p" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descname">path for temporary image files [Default: .buffer]</tt></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="installation.html">Installation</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="gui.html">Graphical User Interface</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, Brendan Smithyman.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

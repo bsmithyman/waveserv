@@ -20,4 +20,7 @@ urlpatterns = patterns('',
     url(r'^render/(?P<filename>.*).png$', 'server.views.view_render', name='render'),
     url(r'^show/(?P<renderpath>.*)$', 'server.views.view_show', name='show'),
     url(r'^download/(?P<path>.*)$', 'django.views.static.serve', {'document_root': CWD}, name='download'),
+    url(r'^meta$', 'server.views.view_meta', name='meta'),
+    url(r'^meta/(?P<path>.*)$', 'server.views.view_metarender', name='metarender'),
+    url(r'^plugins/', include('server.plugins.urls')),
 )

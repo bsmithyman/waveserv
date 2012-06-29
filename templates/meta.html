@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table class="fullwidthtable">
+  <tr>
+    <th>Project</th>
+    <th>Dimensions</th>
+    <th>Cell</th>
+    <th>Origin</th>
+    <th>nom</th>
+    <th>nsam</th>
+    <th>n<sub>ky</sub></th>
+    <th>method</th>
+    <th>Sampling</th>
+    <th>v<sub>min</sub></th>
+    <th>Tau</th>
+    <th>f<sub>base</sub><th>
+  </tr>
+  <tr>
+    <td>{{ projnm }}</td>
+    <td>{{ nx }}&times;{{ nz }}</td>
+    <td>{{ dx }}&times;{{ dz }} (m)</td>
+    <td>({{ xorig }}, {{ zorig }}) (m)</td>
+    <td>{{ nom }}</td>
+    <td>{{ nsam }}</td>
+    <td>{{ nky }}</td>
+    <td>{{ method }}</td>
+    <td>{{ deltatt }} (ms)</td>
+    <td>{{ vmin }}</td>
+    <td>{{ tau }}</td>
+    <td>{{ freqbase }} Hz</td>
+</table>
+
+<img src="meta/dirichlet" alt="y-direction Dirichlet kernels" />
+{% endblock content %}

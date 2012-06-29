@@ -13,6 +13,9 @@ from django.views.decorators.gzip import gzip_page
 # Data model used to cache rendered images
 from server.models import RenderResult
 
+# Project information from pygeo
+from pygeo.fullpy import readini
+
 # Imports the handler function that renders plots, as well as dictionaries
 # of compiled regular-expression objects that are used to interrogate the
 # listing of files in the CWD.
@@ -20,6 +23,12 @@ try:
   from server.handlers import redict, redict_meta, redict_auth, handle
 except Exception as errorresult:
   print ('Unable to import file handlers from waveserv.server.handlers!\n%s'%errorresult)
+  raise
+
+try:
+  import server.helper as helper
+except Exception as errorresult:
+  print('Unable to import helper functions from waveserv.server.helper!\n%s'%errorresult)
   raise
 
 # Contains information from the "waveserv" wrapper script, including parameters
@@ -31,6 +40,7 @@ print project
 # Dictionary that controls the page titles
 page_titles = {	'index':	'Index',
 		'show':		'Figure: %s',
+		'meta':		'Meta Information',
 }
 
 # Defaults
@@ -40,6 +50,7 @@ freshthresh = 0.1
 DEBUG = project.debug
 VERBOSE = project.verbose
 DIBUPATH = project.dibupath
+PROJNM = project.projnm
 
 # Attempts to create the directory for caching of images
 try:
@@ -298,3 +309,39 @@ def view_render (request, filename):
       raise
     return response
 
+# ------------------------------------------------------------------------
+# Non-file meta / project information renderer
+
+def view_meta (request):
+  '''
+  Function that handles processing for the meta information renderers.
+  '''
+
+  # Get session and request QueryDict objects
+  s = request.session
+  r = request.REQUEST
+  q = QueryDict('pagetitle=%s'%page_titles['meta'])
+  q = q.copy()
+
+  inidict = readini(PROJNM + '.ini')
+
+  q.update({'projnm': PROJNM})
+  q.update(inidict)
+
+  return render_to_response('meta.html', q, context_instance=RequestContext(request))
+
+def view_metarender (request, path):
+  '''
+  Function that handles rendering images for meta page.
+  '''
+
+  s = request.session
+  r = request.REQUEST
+
+  if (path == 'dirichlet'):
+    image = helper.dirichlet_render(PROJNM)
+    response = HttpResponse(mimetype='image/png')
+    image.save(response, 'PNG')
+    return response
+
+  raise Http404

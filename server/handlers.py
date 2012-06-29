@@ -55,10 +55,6 @@ trace_plot_options = [{
 	'color': 'g',
 }]
 
-# Colour of the background to be removed automatically
-# (enables cropping of the figure canvas)
-autocropcolour = (255,255,255)
-
 # ------------------------------------------------------------------------
 # Helper functions
 
@@ -78,21 +74,7 @@ def spectral_ap (traces):
 
   return [amp, phase]
 
-def auto_crop(im):
-  '''
-  Automatic PIL cropping from "Kevin Smith" on www.gossamer-threads.com
-  Takes a background colour option (set at the top of the file), and crops
-  the image canvas to get rid of excess.
-  '''
-
-  if (im.mode != "RGB"):
-    im = im.convert("RGB")
-  bg = Image.new("RGB", im.size, autocropcolour)
-  diff = ImageChops.difference(im, bg)
-  bbox = diff.getbbox()
-  if bbox:
-    return im.crop(bbox)
-  return im 
+from server.helper import auto_crop
 
 # ------------------------------------------------------------------------
 # File access functions

@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>Listing of: {{ cwd }}</p>
 
-<a href='meta' title='Project Meta-Information'>Meta</a>
+<ul id="extranav">
+  <li><a href='meta' title='Meta-information Report'>Meta</a></li>
+</ul>
+
+<p id="cwdinfo">Listing of: {{ cwd }}</p>
 
 {% for matchclass in matchlist|dictsort:"id" %}
   {% if matchclass.result|length != 0 %}

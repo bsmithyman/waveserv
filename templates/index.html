@@ -3,6 +3,8 @@
 {% block content %}
 <p>Listing of: {{ cwd }}</p>
 
+<a href='meta' title='Project Meta-Information'>Meta</a>
+
 {% for matchclass in matchlist|dictsort:"id" %}
   {% if matchclass.result|length != 0 %}
     <a name="{{ matchclass.description }}">

@@ -2,6 +2,7 @@
 
 {% block content %}
 
+<h3>General Information</h3>
 <table class="fullwidthtable">
   <tr>
     <th>Project</th>
@@ -32,5 +33,9 @@
     <td>{{ freqbase }} Hz</td>
 </table>
 
-<img src="meta/dirichlet" alt="y-direction Dirichlet kernels" />
+<h3>Model Geometry</h3>
+<img src="meta/geometry" alt="source / receiver geometry" class="metafig" />
+
+<h3>Cross-Line PWD Dirichlet Wavelets</h3>
+<img src="meta/dirichlet" alt="y-direction Dirichlet kernels" class="metafig" />
 {% endblock content %}

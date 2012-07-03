@@ -8,11 +8,28 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.cm
 import matplotlib.pylab as pl
+import matplotlib.patches as mpatches
+
+# Database entries that are created on execution of the "waveserv" wrapper
+from server.models import Project
+project = Project.objects.all()[0]
+
+# ------------------------------------------------------------------------
+# Figure defines
+# Sets the bounding box for certain classes of 2-D figures based on the
+# model dimensions.
+figextent = (	project.xorig,
+		project.xorig + project.dx*project.nx,
+		project.zorig + project.dz*project.nz,
+		project.zorig)
 
 # Colour of the background to be removed automatically
 # (enables cropping of the figure canvas)
 autocropcolour = (255,255,255)
 dpi = 100
+
+# ------------------------------------------------------------------------
+# Helper functions
 
 def auto_crop(im):
   '''
@@ -29,6 +46,80 @@ def auto_crop(im):
   if bbox:
     return im.crop(bbox)
   return im 
+
+# ------------------------------------------------------------------------
+# Geometry renderer
+
+# Settings for geometry
+
+figopts_geometry = {
+	'facecolor':	'w',
+	'figsize':	(15,8),
+}
+
+def geometry_render (projnm):
+
+  from pygeo.fullpy import readini
+  inidict = readini(projnm + '.ini')
+
+  # Get existing ky information
+  srcs = inidict['srcs']
+  recs = inidict['recs']
+  geos = inidict['geos']
+
+  fig = Figure(**figopts_geometry)
+  fig.subplots_adjust(hspace=0.4)
+
+  axy = fig.add_subplot(2,1,1)
+
+  if (srcs.shape != (0,)):
+    axy.plot(srcs[:,0], srcs[:,1], 'r,', label='Sources')
+
+  if (recs.shape != (0,)):
+    axy.plot(recs[:,0], recs[:,1], 'g,', label='Hydrophones')
+
+  if (geos.shape != (0,)):
+    axy.plot(geos[:,0], geos[:,1], 'b,', label='Geophones')
+
+  axy.legend()
+  axy.set_ylabel('Offline Coordinate (m)')
+  axy.set_xlabel('Line Location (m)')
+  axy.set_title('Plan View')
+
+  axy.axis('equal')
+
+  axz = fig.add_subplot(2,1,2, sharex=axy)
+
+  if (srcs.shape != (0,)):
+    axz.plot(srcs[:,0], -srcs[:,2], 'r,', label='Sources')
+
+  if (recs.shape != (0,)):
+    axz.plot(recs[:,0], -recs[:,2], 'g,', label='Hydrophones')
+
+  if (geos.shape != (0,)):
+    axz.plot(geos[:,0], -geos[:,2], 'b,', label='Geophones')
+
+  rect = mpatches.Rectangle((figextent[0],figextent[3]), project.dx*project.nx, project.dz*project.nz,
+				edgecolor='k', fill=False)
+  axz.add_patch(rect)
+
+  axz.legend()
+  axz.set_ylabel('Elevation (m)')
+  axz.set_xlabel('Line Location (m)')
+  axz.set_title('Cross Section')
+
+  #ax.axis(figextent)
+  axz.axis('equal')
+
+  canvas = FigureCanvas(fig)
+  renderer = canvas.get_renderer()
+  renderer.dpi = dpi
+  canvas.draw()
+  l,b,w,h = [int(item) for item in canvas.figure.bbox.bounds]
+  im = Image.fromstring("RGB", (w,h), canvas.tostring_rgb())
+  im = auto_crop(im)
+
+  return im
 
 # ------------------------------------------------------------------------
 # Dirichlet kernel renderer
@@ -121,6 +212,7 @@ def dirichlet_render (projnm):
   maxomega = freqs.max()
 
   fig = Figure(**figopts_dirichlet)
+  fig.subplots_adjust(hspace=0.4)
 
   kysw = np.ones_like(kys) / nky
   ex = dirichlet_kernel(y, kys, kysw)

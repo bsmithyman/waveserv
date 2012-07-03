@@ -338,6 +338,12 @@ def view_metarender (request, path):
   s = request.session
   r = request.REQUEST
 
+  if (path == 'geometry'):
+    image = helper.geometry_render(PROJNM)
+    response = HttpResponse(mimetype='image/png')
+    image.save(response, 'PNG')
+    return response
+
   if (path == 'dirichlet'):
     image = helper.dirichlet_render(PROJNM)
     response = HttpResponse(mimetype='image/png')

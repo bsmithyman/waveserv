@@ -270,3 +270,6 @@ a.button {
 a.button:hover {
   background-color: orange;
 }
+
+.metafig {
+  padding: 1em 0;

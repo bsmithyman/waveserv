@@ -99,7 +99,7 @@ def geometry_render (projnm):
   if (geos.shape != (0,)):
     axz.plot(geos[:,0], -geos[:,2], 'b,', label='Geophones')
 
-  rect = mpatches.Rectangle((figextent[0],figextent[3]), project.dx*project.nx, project.dz*project.nz,
+  rect = mpatches.Rectangle((figextent[0],-figextent[2]), project.dx*project.nx, project.dz*project.nz,
 				edgecolor='k', fill=False)
   axz.add_patch(rect)
 

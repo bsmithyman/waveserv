@@ -71,11 +71,8 @@ def dirichlet_gauleg (m):
   return x, w
 
 def dirichlet_kernel (y, kys, weights):
-  print 'test2'
-  print kys
-  
 
-  outseries = 0.5*dirichlet_kernel(kys[0], y)*weights[0]
+  outseries = 0.5*np.cos(kys[0]* y)*weights[0]
   for i, ky in enumerate(kys[1:]):
     outseries += np.cos(ky * y) * weights[i+1]
 
@@ -124,10 +121,9 @@ def dirichlet_render (projnm):
   maxomega = freqs.max()
 
   fig = Figure(**figopts_dirichlet)
-  print 'test1'
+
   kysw = np.ones_like(kys) / nky
   ex = dirichlet_kernel(y, kys, kysw)
-  print 'test3'
   lk1, gk1 = dirichlet_comparison(y, nky, vmin, minomega)
   lk2, gk2 = dirichlet_comparison(y, nky, vmin, maxomega)
 
@@ -140,13 +136,13 @@ def dirichlet_render (projnm):
   ax.set_title('Minimum $\omega$: %f'%(minomega,))
   ax.legend()
 
-  ax = fig.subplot(2,1,2)
+  ax = fig.add_subplot(2,1,2)
   ax.plot(y, ex, 'r-', label='Current')
   ax.plot(y, lk2, 'b-', label='Linear')
   ax.plot(y, gk2, 'g-', label='Gauss-Legendre')
-  ax.ylabel('Amplitude')
-  ax.xlabel('Cross-line Distance (m)')
-  ax.title('Maximum $\omega$: %f'%(maxomega,))
+  ax.set_ylabel('Amplitude')
+  ax.set_xlabel('Cross-line Distance (m)')
+  ax.set_title('Maximum $\omega$: %f'%(maxomega,))
   ax.legend()
 
   canvas = FigureCanvas(fig)

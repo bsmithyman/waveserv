@@ -70,11 +70,10 @@ def dirichlet_gauleg (m):
 
   return x, w
 
-def dirichlet_kernel (y, kys, weights=None):
+def dirichlet_kernel (y, kys, weights):
   print 'test2'
   print kys
-  if (weights is None):
-    weights = np.ones_like(kys) / len(kys)
+  
 
   outseries = 0.5*dirichlet_kernel(kys[0], y)*weights[0]
   for i, ky in enumerate(kys[1:]):
@@ -85,8 +84,9 @@ def dirichlet_kernel (y, kys, weights=None):
 def dirichlet_comparison (y, nky, vmin, omega):
   kc = omega/vmin
 
-  lin = np.linspace(0, kc, nky)
-  linkernel = dirichlet_kernel(y, lin)
+  linx = np.linspace(0, kc, nky)
+  linw = np.ones_like(linx) / nky
+  linkernel = dirichlet_kernel(y, linx, linw)
 
   gaux, gauw = dirichlet_gauleg(nky)
   gaux *= kc
@@ -125,7 +125,8 @@ def dirichlet_render (projnm):
 
   fig = Figure(**figopts_dirichlet)
   print 'test1'
-  ex = dirichlet_kernel(y, kys)
+  kysw = np.ones_like(kys) / nky
+  ex = dirichlet_kernel(y, kys, kysw)
   print 'test3'
   lk1, gk1 = dirichlet_comparison(y, nky, vmin, minomega)
   lk2, gk2 = dirichlet_comparison(y, nky, vmin, maxomega)

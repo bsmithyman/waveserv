@@ -293,11 +293,11 @@ a.button:hover {
   background-color: orange;
 }
 
-#extranav a {
+#extranav li a {
   text-decoration: none;
 }
 
-#extranav a:hover {
+#extranav li:hover a {
   color: white;
 }
 

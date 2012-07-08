@@ -47,6 +47,19 @@ def auto_crop(im):
     return im.crop(bbox)
   return im 
 
+def spectral_ap (traces):
+  '''
+  Returns the amplitude and phase of a set of data, given arrays corresponding
+  to the real and imaginary components.
+  '''
+
+  [real, imag] = traces
+
+  amp = np.sqrt(real**2 + imag**2)
+  phase = np.arctan(imag/real)
+
+  return [amp, phase]
+
 # ------------------------------------------------------------------------
 # Geometry renderer
 

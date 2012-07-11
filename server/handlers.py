@@ -31,7 +31,7 @@ figopts = {
 }
 figopts_data = {
 	'facecolor':	'w',
-	'figsize':	(15,24),
+	'figsize':	(15,40),
 }
 
 
@@ -377,12 +377,13 @@ def render_utest (traces, figlabels, plotopts):
   viz. utest, utobs, etc.
   '''
 
-  real = traces[::2]
-  imag = traces[1::2]
+  real = traces[0]
+  imag = traces[1]
   [amp, phase] = spectral_ap(traces)
   logamp = np.log10(amp)
 
   fig = Figure(**figopts_data)
+  fig.subplots_adjust(hspace=0.0)
 
   ax = fig.add_subplot(3,1,1)
   ax.set_title('Real')

@@ -376,18 +376,27 @@ def render_utest (traces, figlabels, plotopts):
   frequency-domain data file.
   viz. utest, utobs, etc.
   '''
+
+  real = traces[::2]
+  imag = traces[1::2]
   [amp, phase] = spectral_ap(traces)
   logamp = np.log10(amp)
 
   fig = Figure(**figopts_data)
 
-  ax = fig.add_subplot(2,1,1)
+  ax = fig.add_subplot(3,1,1)
+  ax.set_title('Real')
+  im = ax.imshow(real.T, aspect='auto', **plotopts[0])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['rcb'])
+
+  ax = fig.add_subplot(3,1,2)
   ax.set_title('Phase')
   im = ax.imshow(phase.T, aspect='auto', **plotopts[1])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['pcb'])
 
-  ax = fig.add_subplot(2,1,2)
+  ax = fig.add_subplot(3,1,3)
   ax.set_title('log Amplitude')
   im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
@@ -407,7 +416,8 @@ labels = {
 	'src':		{	'cb':	'Amplitude',
 				'y':	'Time (ms)',
 				'x2':	'Source No.'},
-	'utest':	{	'lcb':	'Log Amplitude',
+	'utest':	{	'rcb':	'Real Amplitude',
+				'lcb':	'Log Amplitude',
 				'pcb':	'Phase'},
 	'ilog':		{	'x':	'Iteration',
 				'obj':	'Objective Function',

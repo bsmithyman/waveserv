@@ -3,17 +3,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; waveserv 1.2 documentation</title>
-    
+    <title>Installation &mdash; waveserv v1.2 documentation</title>
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/print.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -27,13 +24,13 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/theme_extras.js"></script>
-    <link rel="top" title="waveserv 1.2 documentation" href="index.html" />
+    <link rel="top" title="waveserv v1.2 documentation" href="index.html" />
     <link rel="next" title="Command Line Interface" href="cli.html" />
     <link rel="prev" title="Introduction" href="index.html" /> 
   </head>
   <body>
       <div class="header"><h1 class="heading"><a href="index.html">
-          <span>waveserv 1.2 documentation</span></a></h1>
+          <span>waveserv v1.2 documentation</span></a></h1>
         <h2 class="heading"><span>Installation</span></h2>
       </div>
       <div class="topnav">
@@ -92,31 +89,42 @@ fi</pre>
 <col width="25%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">Package</th>
+<tr><th class="head">Package</th>
 <th class="head">Description</th>
 <th class="head">Minimum Version</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>python</td>
+<tr><td>python</td>
 <td>Python Interpreter</td>
 <td>Tested with 2.6+</td>
 </tr>
-<tr class="row-odd"><td>python-numpy</td>
+<tr><td>python-numpy</td>
 <td>Numerical Python</td>
 <td>Untested</td>
 </tr>
-<tr class="row-even"><td>python-django</td>
+<tr><td>python-django</td>
 <td>Django Web Framework</td>
 <td>1.2</td>
 </tr>
-<tr class="row-odd"><td>python-matplotlib</td>
+<tr><td>python-matplotlib</td>
 <td>Matlab-like plotting environment</td>
+<td>Untested</td>
+</tr>
+<tr><td>python-imaging</td>
+<td>Python Imaging Library (PIL)</td>
 <td>Untested</td>
 </tr>
 </tbody>
 </table>
-<p>If you are using Linux, I would expect all of the generic libraries to be in the package manager, but if not (e.g. CentOS has terrible Python support) they could be installed using another method like &#8220;easy_install&#8221;.  I have not tested with older versions of numpy and matplotlib, but I&#8217;m fairly sure that the Django framework needs to be at minimum v1.2.</p>
+<p>The names above correspond to Debian/Ubuntu packages.  If you are using Linux, I would expect all of the generic libraries to be in the package manager, but if not (e.g. CentOS has problematic Python support) they could be installed using another method like &#8220;easy_install&#8221;.  I have not tested with older versions of numpy and matplotlib, but I&#8217;m fairly sure that the Django framework needs to be at minimum v1.2.</p>
+<p>For Ubuntu/Debian users, you will need to run:</p>
+<div class="highlight-python"><pre>sudo apt-get install python python-numpy python-django python-matplotlib python-imaging</pre>
+</div>
+<p>For CentOS users, you will need to run:</p>
+<div class="highlight-python"><pre>su
+yum install python numpy Django python-matplotlib python-imaging</pre>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If you are using Mac OS X (or if you want to use Python on MS Windows), I highly recommend the commercial <a class="reference external" href="http://www.enthought.com/products/epd.php">EPD (Enthought Python Distribution)</a>.  This is free for academic use, and reasonably priced for industry use given the level of support offered.  Additionally, there is a free version that most likely would suffice for casual use.  This can also be extremely handy for poorly-behaved Linux distributions.  Enthought supports Python development and open source.</p>
@@ -140,7 +148,7 @@ fi</pre>
 
     <div class="footer">
         &copy; Copyright 2012, Brendan Smithyman.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

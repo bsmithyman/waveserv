@@ -10,7 +10,7 @@
 \indexentry{-d FILE, --db=FILE!waveserv command line option|hyperpage}{5}
 \indexentry{waveserv command line option!-g, --serverdebug|hyperpage}{5}
 \indexentry{-g, --serverdebug!waveserv command line option|hyperpage}{5}
-\indexentry{waveserv command line option!-k, --keep|hyperpage}{5}
-\indexentry{-k, --keep!waveserv command line option|hyperpage}{5}
-\indexentry{waveserv command line option!-p DIBUPATH, --dibupath=DIBUPATH|hyperpage}{5}
-\indexentry{-p DIBUPATH, --dibupath=DIBUPATH!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-k, --keep|hyperpage}{6}
+\indexentry{-k, --keep!waveserv command line option|hyperpage}{6}
+\indexentry{waveserv command line option!-p DIBUPATH, --dibupath=DIBUPATH|hyperpage}{6}
+\indexentry{-p DIBUPATH, --dibupath=DIBUPATH!waveserv command line option|hyperpage}{6}

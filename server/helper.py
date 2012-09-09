@@ -54,9 +54,10 @@ def spectral_ap (traces):
   '''
 
   [real, imag] = traces
+  tracetemp = real + 1j * imag
 
-  amp = np.sqrt(real**2 + imag**2)
-  phase = np.arctan(imag/real)
+  amp = np.abs(tracetemp)
+  phase = np.angle(tracetemp)
 
   return [amp, phase]
 

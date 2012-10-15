@@ -73,7 +73,7 @@ else:
 try:
   inidict = readini(projnm + '.ini')
 except:
-  parser.error('Project ini file %s.ini does not exist!'%(projnm,))
+  parser.error('Problem reading project ini file %s.ini!'%(projnm,))
 
 # ----------------------------------------------------------------------
 # Django settings initialization

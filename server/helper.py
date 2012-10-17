@@ -5,6 +5,7 @@ import Image, ImageChops
 
 # Plotting
 from matplotlib.figure import Figure
+from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.cm
 import matplotlib.pylab as pl
@@ -19,9 +20,11 @@ project = Project.objects.all()[0]
 # Sets the bounding box for certain classes of 2-D figures based on the
 # model dimensions.
 figextent = (	project.xorig,
-		project.xorig + project.dx*project.nx,
-		project.zorig + project.dz*project.nz,
+		project.xorig + project.dx*(project.nx-1),
+		project.zorig + project.dz*(project.nz-1),
 		project.zorig)
+
+pfigextent = (figextent[0], figextent[1], -figextent[2], -figextent[3])
 
 # Colour of the background to be removed automatically
 # (enables cropping of the figure canvas)
@@ -71,7 +74,7 @@ figopts_geometry = {
 	'figsize':	(15,8),
 }
 
-def geometry_render (projnm):
+def geometry_render_xy (projnm):
 
   from pygeo.fullpy import readini
   inidict = readini(projnm + '.ini')
@@ -82,9 +85,9 @@ def geometry_render (projnm):
   geos = inidict['geos']
 
   fig = Figure(**figopts_geometry)
-  fig.subplots_adjust(hspace=0.4)
 
-  axy = fig.add_subplot(2,1,1)
+  axy = fig.add_subplot(1,1,1, aspect=1.0, adjustable='box')
+  axy.yaxis.set_major_formatter(FormatStrFormatter('%+d'))
 
   if (srcs.shape != (0,)):
     axy.plot(srcs[:,0], srcs[:,1], 'r,', label='Sources')
@@ -95,14 +98,40 @@ def geometry_render (projnm):
   if (geos.shape != (0,)):
     axy.plot(geos[:,0], geos[:,1], 'b,', label='Geophones')
 
-  axy.legend()
+  #axy.legend()
   axy.set_ylabel('Offline Coordinate (m)')
   axy.set_xlabel('Line Location (m)')
   axy.set_title('Plan View')
 
-  axy.axis('equal')
+  #currentyaxis = axy.axis()
+  #axy.axis((figextent[0], figextent[1], currentyaxis[2], currentyaxis[3]))
 
-  axz = fig.add_subplot(2,1,2, sharex=axy)
+  canvas = FigureCanvas(fig)
+  renderer = canvas.get_renderer()
+  renderer.dpi = dpi
+  canvas.draw()
+  l,b,w,h = [int(item) for item in canvas.figure.bbox.bounds]
+  im = Image.fromstring("RGB", (w,h), canvas.tostring_rgb())
+  im = auto_crop(im)
+
+  return im
+
+# ------------------------------------------------------------------------
+
+def geometry_render_xz (projnm):
+
+  from pygeo.fullpy import readini
+  inidict = readini(projnm + '.ini')
+
+  # Get existing ky information
+  srcs = inidict['srcs']
+  recs = inidict['recs']
+  geos = inidict['geos']
+
+  fig = Figure(**figopts_geometry)
+
+  axz = fig.add_subplot(1,1,1, aspect=1.0, adjustable='box')
+  axz.yaxis.set_major_formatter(FormatStrFormatter('%+d'))
 
   if (srcs.shape != (0,)):
     axz.plot(srcs[:,0], -srcs[:,2], 'r,', label='Sources')
@@ -113,17 +142,22 @@ def geometry_render (projnm):
   if (geos.shape != (0,)):
     axz.plot(geos[:,0], -geos[:,2], 'b,', label='Geophones')
 
-  rect = mpatches.Rectangle((figextent[0],-figextent[2]), project.dx*project.nx, project.dz*project.nz,
-				edgecolor='k', fill=False)
+  print figextent
+  axz.plot([pfigextent[0],pfigextent[0],pfigextent[1],pfigextent[1]],
+           [pfigextent[2],pfigextent[3],pfigextent[3],pfigextent[2]],
+           'k:')#figopts_geometry['facecolor'])
+
+  rect = mpatches.Rectangle((figextent[0],-figextent[2]), figextent[1]-figextent[0], -figextent[3] + figextent[2] , edgecolor='k', fill=False)
   axz.add_patch(rect)
 
-  axz.legend()
+  #axz.legend()
   axz.set_ylabel('Elevation (m)')
   axz.set_xlabel('Line Location (m)')
   axz.set_title('Cross Section')
 
   #ax.axis(figextent)
-  axz.axis('equal')
+  #axz.axis('scaled')
+  axz.axis(pfigextent)
 
   canvas = FigureCanvas(fig)
   renderer = canvas.get_renderer()

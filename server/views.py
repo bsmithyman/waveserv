@@ -338,8 +338,14 @@ def view_metarender (request, path):
   s = request.session
   r = request.REQUEST
 
-  if (path == 'geometry'):
-    image = helper.geometry_render(PROJNM)
+  if (path == 'geometry_xy'):
+    image = helper.geometry_render_xy(PROJNM)
+    response = HttpResponse(mimetype='image/png')
+    image.save(response, 'PNG')
+    return response
+
+  if (path == 'geometry_xz'):
+    image = helper.geometry_render_xz(PROJNM)
     response = HttpResponse(mimetype='image/png')
     image.save(response, 'PNG')
     return response

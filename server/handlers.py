@@ -381,13 +381,14 @@ def render_utest (traces, figlabels, plotopts):
   imag = traces[1]
   [amp, phase] = spectral_ap(traces)
   logamp = np.log10(amp)
+  logreal = np.cos(phase) * logamp
 
   fig = Figure(**figopts_data)
   fig.subplots_adjust(hspace=0.0)
 
   ax = fig.add_subplot(3,1,1)
-  ax.set_title('Real')
-  im = ax.imshow(real.T, aspect='auto', **plotopts[0])
+  ax.set_title('log Real')
+  im = ax.imshow(logreal.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['rcb'])
 
@@ -518,7 +519,7 @@ def handle (filename):
       try:
         fig = mappings[key](traces)
       except Exception as errorresult:
-        print('Unable to generate figure for file %s as %s.\n%s'(filename, key, errorresult))
+        print('Unable to generate figure for file %s as %s.\n%s'%(filename, key, errorresult))
         return None
 
       try:

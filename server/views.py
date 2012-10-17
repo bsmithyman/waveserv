@@ -292,6 +292,7 @@ def view_render (request, filename):
       image.save(response, 'PNG')
       return response
     else:
+      rr.delete()
       raise Http404
   else:
     # According to the database, the original file hasn't been modified since

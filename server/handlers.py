@@ -41,6 +41,8 @@ panel_plot_options = [{
 },{
 	'cmap': matplotlib.cm.jet,
 },{
+	'cmap': matplotlib.cm.bwr,
+},{
 	'cmap': matplotlib.cm.gray,
 }]
 
@@ -472,8 +474,8 @@ mappings = {
 'wave':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
 
 #	'bwav':	lambda tr: render_wavefield_complex(tr, labels['field']),
-'src':	lambda tr: render_source(tr, labels['src'], trace_plot_options[0:2]+panel_plot_options[2:3]),
-'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[1:3]),
+'src':	lambda tr: render_source(tr, labels['src'], trace_plot_options[0:2]+panel_plot_options[3:4]),
+'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[2:4]),
 'ilog':	lambda tr: render_ilog(tr, labels['ilog'], trace_plot_options),
 }
 

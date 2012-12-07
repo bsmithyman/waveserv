@@ -126,7 +126,7 @@ def get_segy_complex (filename):
   real = sf[::2]#sf.readTraces(sf.findTraces('trid',1001,1001))
   imag = sf[1::2]#sf.readTraces(sf.findTraces('trid',1002,1002))
 
-  return [real, imag]
+  return real + 1j * imag
 
 # ------------------------------------------------------------------------
 
@@ -307,7 +307,7 @@ def render_wavefield_complex (traces, figlabels, plotopts):
   viz. the gradient, forward- or backword-propagated wavefield
   '''
 
-  [real, imag] = traces
+  [real, imag] = traces.real, traces.imag
 
   if (real.shape[0] > real.shape[1]):
     figmode = 'horizontal'
@@ -380,8 +380,7 @@ def render_utest (traces, figlabels, plotopts):
   viz. utest, utobs, etc.
   '''
 
-  real = traces[0]
-  imag = traces[1]
+  real, imag = traces.real, traces.imag
   [amp, phase] = spectral_ap(traces)
   logamp = np.log10(amp)
   logreal = np.cos(phase) * logamp
@@ -403,7 +402,7 @@ def render_utest (traces, figlabels, plotopts):
 
   ax = fig.add_subplot(3,1,3)
   ax.set_title('log Amplitude')
-  im = ax.imshow(logamp.T, aspect='auto', vmin=-3, vmax=7, **plotopts[0])
+  im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['lcb'])
 
@@ -416,8 +415,7 @@ def render_udiff (traces, figlabels, plotopts):
   viz. udiff, etc.
   '''
 
-  real = traces[0]
-  imag = traces[1]
+  real, imag = traces.real, traces.imag
   [amp, phase] = spectral_ap(traces)
 
   fig = Figure(**figopts_data)

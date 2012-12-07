@@ -9,6 +9,10 @@ listing = [
 	{	'urltag': 'plugins.psf.view_psf',
 		'shortname': 'PSF',
 		'longname': '2.5D PSF Analysis'},
+
+	{	'urltag': 'plugins.cycleskip.view_cycleskip',
+		'shortname': 'CycleSkip',
+		'longname': 'Cycle Skip Analysis'},
 ]
 
 urlpatterns = patterns('',
@@ -20,4 +24,7 @@ urlpatterns = patterns('',
 
   url(r'^psf$', 'plugins.psf.view_psf', name='psf'),
   url(r'^psf/(?P<path>.*)$', 'plugins.psf.view_psfrender', name='psfrender'),
+
+  url(r'^cycleskip$', 'plugins.cycleskip.view_cycleskip', name='cycleskip'),
+  url(r'^cycleskip/(?P<path>.*)$', 'plugins.cycleskip.view_cycleskiprender', name='cycleskiprender'),
 )

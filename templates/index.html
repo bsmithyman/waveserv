@@ -9,7 +9,7 @@
   {% endfor %}
 </ul>
 
-<p id="cwdinfo">Listing of: {{ cwd }}</p>
+<p id="headtext">Listing of: {{ cwd }}</p>
 
 {% for matchclass in matchlist|dictsort:"id" %}
   {% if matchclass.result|length != 0 %}

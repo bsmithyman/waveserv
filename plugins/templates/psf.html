@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Cross-Line Plane-Wave Decomposition Point Spread Function</h3>
+<img src='{% url "psfrender" "dirichlet"' alt="y-direction Dirichlet kernels" class="metafig" />
+
+{% endblock content %}

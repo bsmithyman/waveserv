@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% load url from future %}
 
 {% block content %}
 
 <ul id="extranav">
-  <li><a href='meta' title='Meta-information Report'>Meta</a></li>
+  {% for plugitem in pluginlist %}
+  <li><a href='{% url plugitem.urltag %}' title='{{ plugitem.longname }}'>{{ plugitem.shortname }}</a></li>
+  {% endfor %}
 </ul>
 
 <p id="cwdinfo">Listing of: {{ cwd }}</p>

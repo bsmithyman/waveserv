@@ -109,7 +109,8 @@ settings.configure(TEMPLATE_DIRS    = (TEMPLATEDIR,),
 			'django.middleware.csrf.CsrfViewMiddleware',),
                    INSTALLED_APPS   = (	'django.contrib.contenttypes',
 					'django.contrib.sessions',
-					'server',),
+					'server',
+					'plugins',),
 )
 
 settings.staticdir = STATICDIR

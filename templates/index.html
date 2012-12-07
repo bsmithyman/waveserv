@@ -37,8 +37,8 @@
       </tr>
       {% for item in matchclass.result|dictsort:sortby %}
       <tr class="{% if forloop.counter|divisibleby:2 %}evenrow{% else %}oddrow{% endif %}">
-        <td class="tdaction"><a class="button" href="{% url show item.filename %}" title="Display {{ item.filename }}">&nbsp;</a></td>
-        <td class="tdaction"><a class="button" href="{% url download item.filename %}" title="Download {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdaction"><a class="button" href="{% url 'show' item.filename %}" title="Display {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdaction"><a class="button" href="{% url 'download' item.filename %}" title="Download {{ item.filename }}">&nbsp;</a></td>
         <td class="tdfreshnessindicator">{% if item.freshness != None %}<a class="freshnessindicator" style="background-color: rgb(192,{% widthratio item.freshness 1 255 %},128);"></a>{% endif %}</td>
         <td class="tdfilename">{{ item.filename }}</td>
         <td class="tditeration">{% if item.iteration != None %}{{ item.iteration }}{% endif %}</td>

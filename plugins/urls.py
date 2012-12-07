@@ -2,11 +2,11 @@ from django.conf.urls.defaults import patterns, include, url
 from django.views.generic.simple import *
 
 listing = [
-	{	'urltag': 'plugins.meta.view_geom',
+	{	'urltag': 'plugins.geom.view_geom',
 		'shortname': 'Geom.',
 		'longname': 'Acquision and Model Geometry'},
 
-	{	'urltag': 'plugins.meta.view_psf',
+	{	'urltag': 'plugins.psf.view_psf',
 		'shortname': 'PSF',
 		'longname': '2.5D PSF Analysis'},
 ]

@@ -174,14 +174,15 @@ expressions_authoritative = {
 # Could make these distinct
 #'wave':	'^%s(?P<iter>[0-9]*)\.wave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
 #'bwav':	'^%s(?P<iter>[0-9]*)\.bwave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
-'utest':	[6,'Data','^%s\.u[td]?[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'utest':	[6,'Data','^%s\.ut[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'udiff':	[7,'Data Difference','^%s\.ud[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
 # Could make these distinct
 #'gvp':		'^%s(?P<iter>[0-9]*)\.gvp(?P<freq>[0-9]*\.?[0-9]+)[^trfO]*$',
 #'gvpr':	'^%s(?P<iter>[0-9]*)\.gvpr(?P<freq>[0-9]*\.?[0-9]+).*$',
 #'gvpf':	'^%s(?P<iter>[0-9]*)\.gvpf(?P<freq>[0-9]*\.?[0-9]*).*$',
 #'gvpt':	'^%s(?P<iter>[0-9]*)\.gvpt(?P<freq>[0-9]*\.?[0-9]*).*$',
 #'gvpO':	'^%s(?P<iter>[0-9]*)\.gvpO(?P<freq>[0-9]*\.?[0-9]*).*$',
-'wave':		[7,'Wavefield','^%s(?P<iter>[0-9]*)\.(wave|bwave)(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'wave':		[8,'Wavefield','^%s(?P<iter>[0-9]*)\.(wave|bwave)(?P<freq>[0-9]*\.?[0-9]+).*$'],
 }
 redict_auth = compile_to_dict(expressions_authoritative)
 
@@ -374,8 +375,8 @@ def render_wavefield_complex_ap (traces, figlabels, plotopts):
 
 def render_utest (traces, figlabels, plotopts):
   '''
-  Renders two 2-D plots, representing the phase and log-amplitude of a
-  frequency-domain data file.
+  Renders three 2-D plots, representing the log-real, phase and
+  log-amplitude of a frequency-domain data file.
   viz. utest, utobs, etc.
   '''
 
@@ -390,19 +391,54 @@ def render_utest (traces, figlabels, plotopts):
 
   ax = fig.add_subplot(3,1,1)
   ax.set_title('log Real')
-  im = ax.imshow(logreal.T, aspect='auto', **plotopts[0])
+  im = ax.imshow(logreal.T, aspect='auto', **plotopts[1])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['rcb'])
 
   ax = fig.add_subplot(3,1,2)
   ax.set_title('Phase')
-  im = ax.imshow(phase.T, aspect='auto', **plotopts[1])
+  im = ax.imshow(phase.T, aspect='auto', vmin=-np.pi, vmax=np.pi, **plotopts[2])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['pcb'])
 
   ax = fig.add_subplot(3,1,3)
   ax.set_title('log Amplitude')
-  im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
+  im = ax.imshow(logamp.T, aspect='auto', vmin=-3, vmax=7, **plotopts[0])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['lcb'])
+
+  return fig
+
+def render_udiff (traces, figlabels, plotopts):
+  '''
+  Renders three 2-D plots, representing the real, phase and
+  amplitude of a frequency-domain data difference file.
+  viz. udiff, etc.
+  '''
+
+  real = traces[0]
+  imag = traces[1]
+  [amp, phase] = spectral_ap(traces)
+
+  fig = Figure(**figopts_data)
+  fig.subplots_adjust(hspace=0.0)
+
+  ax = fig.add_subplot(3,1,1)
+  ax.set_title('Real')
+  clip = max(abs(real.min()),abs(real.max()))
+  im = ax.imshow(real.T, aspect='auto', vmin=-clip, vmax=clip, **plotopts[1])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['rcb'])
+
+  ax = fig.add_subplot(3,1,2)
+  ax.set_title('Phase')
+  im = ax.imshow(phase.T, aspect='auto', vmin=-np.pi, vmax=np.pi, **plotopts[2])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['pcb'])
+
+  ax = fig.add_subplot(3,1,3)
+  ax.set_title('Amplitude')
+  im = ax.imshow(amp.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['lcb'])
 
@@ -420,8 +456,11 @@ labels = {
 	'src':		{	'cb':	'Amplitude',
 				'y':	'Time (ms)',
 				'x2':	'Source No.'},
-	'utest':	{	'rcb':	'Real Amplitude',
+	'utest':	{	'rcb':	'Log Real Amplitude',
 				'lcb':	'Log Amplitude',
+				'pcb':	'Phase'},
+	'udiff':	{	'rcb':	'Real Amplitude',
+				'lcb':	'Amplitude',
 				'pcb':	'Phase'},
 	'ilog':		{	'x':	'Iteration',
 				'obj':	'Objective Function',
@@ -444,6 +483,7 @@ ftypes = {
 	'bwav':		get_segy_complex,
 	'src':		get_segy_time,
 	'utest':	get_segy_complex,
+	'udiff':	get_segy_complex,
 	'ilog':		get_ilog,
 }
 
@@ -475,7 +515,8 @@ mappings = {
 
 #	'bwav':	lambda tr: render_wavefield_complex(tr, labels['field']),
 'src':	lambda tr: render_source(tr, labels['src'], trace_plot_options[0:2]+panel_plot_options[3:4]),
-'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[2:4]),
+'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[1:4]),
+'udiff':	lambda tr: render_udiff(tr, labels['udiff'], panel_plot_options[1:4]),
 'ilog':	lambda tr: render_ilog(tr, labels['ilog'], trace_plot_options),
 }
 

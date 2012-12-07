@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load url from future %}
 
 {% block content %}
 
@@ -63,9 +64,9 @@
 </table>
 
 <h3>Model Geometry</h3>
-<img src='{% url "geomrender" "geometry_xy" %}' alt="source / receiver geometry" class="metafig" />
+<img src='{% url "plugins.geom.view_geomrender" "geometry_xy" %}' alt="source / receiver geometry" class="metafig" />
 <br/>
-<img src='{% url "geomrender" "geometry_xz" %}' alt="source / receiver geometry" class="metafig" />
+<img src='{% url "plugins.geom.view_geomrender" "geometry_xz" %}' alt="source / receiver geometry" class="metafig" />
 
 {% endblock content %}
 

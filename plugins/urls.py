@@ -16,7 +16,7 @@ urlpatterns = patterns('',
   url(r'^index$', direct_to_template, {'template': 'plugins.html'}),
 
   url(r'^geom$', 'plugins.geom.view_geom', name='geom'),
-  url(r'^geom/(?P<path>.*)$', 'plugins.meta.view_geomrender', name='geomrender'),
+  url(r'^geom/(?P<path>.*)$', 'plugins.geom.view_geomrender', name='geomrender'),
 
   url(r'^psf$', 'plugins.psf.view_psf', name='psf'),
   url(r'^psf/(?P<path>.*)$', 'plugins.psf.view_psfrender', name='psfrender'),

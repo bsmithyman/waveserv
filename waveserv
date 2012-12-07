@@ -17,6 +17,7 @@ EPILOG = '''NOTE: This software uses the Django test web server and does not inc
 '''
 
 defaultbind    = '127.0.0.1:1503'
+defaultbindall = '0.0.0.0:1503'
 defaultdbname  = '.waveserv.db'
 defaultbufpath = '.buffer'
 
@@ -63,6 +64,8 @@ parser.set_defaults(verbose     = False,
 
 if (len(args) == 0):
   globresult = glob.glob('*.ini')
+  if ('tmp.ini' in globresult):
+    globresult.remove('tmp.ini')
   if (len(globresult) == 1):
     projnm = os.path.splitext(globresult[0])[0]
   else:
@@ -137,6 +140,9 @@ projdict = {
 	'ng':		inidict['ng'],
 }
 pinst = Project.objects.create(**projdict)
+
+if (options.bind == 'all'):
+  options.bind = defaultbindall
 
 # Run the web server
 management.call_command('runserver', options.bind)

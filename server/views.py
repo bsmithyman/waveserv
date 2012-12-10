@@ -93,9 +93,13 @@ def view_index (request):
 
     # The actual filename of the matching object
     matches = [part.group() for part in matchobj]
+    valid = [os.path.isfile(fn) for fn in matches]
 
     # The extracted values from the regular expression
     extras = [part.groupdict() for part in matchobj]
+
+    matches = [matches[i] for i in range(len(valid)) if valid[i]]
+    extras = [extras[i] for i in range(len(valid)) if valid[i]]
 
     # Compiles statistics for each filename in "matches"
     # Modification datetime

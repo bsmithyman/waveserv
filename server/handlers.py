@@ -5,17 +5,7 @@ import numpy as np
 # SEG-Y library
 from pygeo.segyread import SEGYFile
 
-# Image manipulation
-import Image, ImageChops
-
-# Plotting
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import matplotlib.cm
-
-# Database entries that are created on execution of the "waveserv" wrapper
-from server.models import Project
-project = Project.objects.all()[0]
+from server.helper import *
 
 DEBUG = project.debug
 VERBOSE = project.verbose
@@ -56,14 +46,6 @@ trace_plot_options = [{
 },{
 	'color': 'g',
 }]
-
-# ------------------------------------------------------------------------
-# Helper functions
-
-def swap (trace):
-  return [trace, np.arange(len(trace))]
-
-from server.helper import auto_crop, spectral_ap
 
 # ------------------------------------------------------------------------
 # File access functions

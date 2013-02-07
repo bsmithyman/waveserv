@@ -4,6 +4,8 @@ import numpy as np
 import Image, ImageChops
 
 # Plotting
+import matplotlib
+matplotlib.use('agg')
 from matplotlib.figure import Figure
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -61,3 +63,5 @@ def spectral_ap (traces):
 
   return [amp, phase]
 
+def swap (trace):
+  return [trace, np.arange(len(trace))]

@@ -165,6 +165,7 @@ expressions_authoritative = {
 #'gvpt':	'^%s(?P<iter>[0-9]*)\.gvpt(?P<freq>[0-9]*\.?[0-9]*).*$',
 #'gvpO':	'^%s(?P<iter>[0-9]*)\.gvpO(?P<freq>[0-9]*\.?[0-9]*).*$',
 'wave':		[8,'Wavefield','^%s(?P<iter>[0-9]*)\.(wave|bwave)(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'slice':	[9,'Time Slice','^%s\.sl(?P<iter>[0-9]*)'],
 }
 redict_auth = compile_to_dict(expressions_authoritative)
 
@@ -277,6 +278,28 @@ def render_model_real (traces, figlabels, plotopts):
 
   ax = fig.add_subplot(1,1,1)
   im = ax.imshow(traces.T, extent=figextent, **plotopts[0])
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
+  cb.set_label(figlabels['cb'])
+
+  return fig
+
+def render_slice_real (traces, figlabels, plotopts):
+  '''
+  Renders a 2-D plot of a set of real values with the dimensions of the model.
+  The colour scale is symmetric about zero.
+  '''
+
+  if (traces.shape[0] > traces.shape[1]):
+    figmode = 'horizontal'
+  else:
+    figmode = 'vertical'
+
+  fig = Figure(**figopts)
+
+  clip=1e5
+
+  ax = fig.add_subplot(1,1,1)
+  im = ax.imshow(traces.T, extent=figextent, vmin=-clip, vmax=clip, **plotopts[0])
   cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
   cb.set_label(figlabels['cb'])
 
@@ -465,6 +488,7 @@ ftypes = {
 	'utest':	get_segy_complex,
 	'udiff':	get_segy_complex,
 	'ilog':		get_ilog,
+	'slice':	get_segy_real,
 }
 
 # Maps a given file-type key to the function that renders it.  Each function
@@ -498,6 +522,7 @@ mappings = {
 'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[1:4]),
 'udiff':	lambda tr: render_udiff(tr, labels['udiff'], panel_plot_options[1:4]),
 'ilog':	lambda tr: render_ilog(tr, labels['ilog'], trace_plot_options),
+'slice':	lambda tr: render_slice_real(tr, labels['field'], panel_plot_options[2:3]),
 }
 
 # ------------------------------------------------------------------------

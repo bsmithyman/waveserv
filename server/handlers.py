@@ -156,7 +156,7 @@ expressions_authoritative = {
 # Could make these distinct
 #'wave':	'^%s(?P<iter>[0-9]*)\.wave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
 #'bwav':	'^%s(?P<iter>[0-9]*)\.bwave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
-'utest':	[6,'Data','^%s\.ut[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'utest':	[6,'Data','^%s\.(ut|vz|vx)[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
 'udiff':	[7,'Data Difference','^%s\.ud[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
 # Could make these distinct
 #'gvp':		'^%s(?P<iter>[0-9]*)\.gvp(?P<freq>[0-9]*\.?[0-9]+)[^trfO]*$',

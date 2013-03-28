@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic.simple import *
+from django.views.generic import RedirectView, TemplateView
 
 listing = [
 	{	'urltag': 'plugins.geom.view_geom',
@@ -16,8 +16,8 @@ listing = [
 ]
 
 urlpatterns = patterns('',
-  url(r'^$', redirect_to, {'url': '/plugins/index'}),
-  url(r'^index$', direct_to_template, {'template': 'plugins.html'}),
+  url(r'^$', RedirectView.as_view(url='/plugins/index')),
+  url(r'^index$', TemplateView.as_view(template_name='plugins.html')),
 
   url(r'^geom$', 'plugins.geom.view_geom', name='geom'),
   url(r'^geom/(?P<path>.*)$', 'plugins.geom.view_geomrender', name='geomrender'),

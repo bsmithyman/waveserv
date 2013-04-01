@@ -63,8 +63,8 @@ def cycleskip_render (projnm, freq, obsfile, estfile):
   im = ax.imshow(phi.real.T, vmin=-np.pi, vmax=np.pi, aspect='auto', cmap=matplotlib.cm.bwr)
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label('Phase Error (radians)')
-  cb.set_ylabel('Receiver')
-  cb.set_xlabel('Source')
+  ax.set_ylabel('Receiver')
+  ax.set_xlabel('Source')
 
   canvas = FigureCanvas(fig)
   renderer = canvas.get_renderer()

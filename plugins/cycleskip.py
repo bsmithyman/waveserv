@@ -25,6 +25,10 @@ def offset_image (srcs, recs):
 
   sgeom.shape = (ns, 1, 3)
   rgeom.shape = (1, nr, 3)
+  sx.shape = (ns, 1)
+  sz.shape = (ns, 1)
+  rx.shape = (1, nr)
+  rz.shape = (1, nr)
 
   offsets3d = np.sqrt(((rgeom - sgeom)**2).sum(axis=2))
 

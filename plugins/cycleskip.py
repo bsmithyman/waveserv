@@ -58,7 +58,7 @@ def cycleskip_render (projnm, freq, obsfile, estfile):
   ax.set_title('Phase Error $\phi$ at %3.3f Hz'%(freq,))
   cs = ax.contour(offsets3d, colors='k', origin='lower')
   cl = ax.clabel(cs, inline=True, fmt='%6.0f m')
-  cs = ax.contour(offsets2d, colors='k', origin='lower', linestyle='dashed')
+  cs = ax.contour(offsets2d, colors='k', origin='lower', linestyles='dashed')
   #cl = ax.clabel(cs, inline=True, fmt='%6.0f m')
   im = ax.imshow(phi.real, vmin=-np.pi, vmax=np.pi, aspect='auto', cmap=matplotlib.cm.bwr, origin='lower')
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)

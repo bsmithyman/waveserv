@@ -398,24 +398,24 @@ def render_utest (traces, figlabels, plotopts):
   im = ax.imshow(logreal, aspect='auto', origin='lower', **plotopts[1])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['rcb'])
-  ax.set_xlabel(figlabels['xaxis']
-  ax.set_zlabel(figlabels['yaxis']
+  ax.set_xlabel(figlabels['xaxis'])
+  ax.set_zlabel(figlabels['yaxis'])
 
   ax = fig.add_subplot(3,1,2)
   ax.set_title('Phase')
   im = ax.imshow(phase, aspect='auto', origin='lower', vmin=-np.pi, vmax=np.pi, **plotopts[2])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['pcb'])
-  ax.set_xlabel(figlabels['xaxis']
-  ax.set_zlabel(figlabels['yaxis']
+  ax.set_xlabel(figlabels['xaxis'])
+  ax.set_zlabel(figlabels['yaxis'])
 
   ax = fig.add_subplot(3,1,3)
   ax.set_title('log Amplitude')
   im = ax.imshow(logamp, aspect='auto', origin='lower', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['lcb'])
-  ax.set_xlabel(figlabels['xaxis']
-  ax.set_zlabel(figlabels['yaxis']
+  ax.set_xlabel(figlabels['xaxis'])
+  ax.set_zlabel(figlabels['yaxis'])
 
   return fig
 

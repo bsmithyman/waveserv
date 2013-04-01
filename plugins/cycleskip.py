@@ -32,7 +32,7 @@ def offset_image (srcs, recs):
 
   offsets3d = np.sqrt(((rgeom - sgeom)**2).sum(axis=2))
 
-  offsets2d = np.sqrt((rx.T - sx)**2 + (rz.T - sz)**2)
+  offsets2d = np.sqrt((rx - sx)**2 + (rz - sz)**2)
 
   return offsets3d, offsets2d
 

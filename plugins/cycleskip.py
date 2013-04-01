@@ -60,7 +60,7 @@ def cycleskip_render (projnm, freq, obsfile, estfile):
   cl = ax.clabel(cs, inline=True, fmt='%6.0f')
   cs = ax.contour(offsets2d.T, colors='0.25', linewidth=2, origin='lower')
   #cl = ax.clabel(cs, inline=True, fmt='%6.0f')
-  im = ax.imshow(phi.real.T, vmin=-np.pi, vmax=np.pi, aspect='auto', cmap=matplotlib.cm.bwr)
+  im = ax.imshow(phi.real.T, vmin=-np.pi, vmax=np.pi, aspect='auto', cmap=matplotlib.cm.bwr, origin='lower')
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label('Phase Error (radians)')
   ax.set_ylabel('Receiver')

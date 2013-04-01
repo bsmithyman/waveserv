@@ -26,7 +26,11 @@ def offset_image (srcs, recs):
   sgeom.shape = (ns, 1, 3)
   rgeom.shape = (1, nr, 3)
 
-  offsets = np.sqrt(((rgeom - sgeom)**2).sum(axis=2))
+  offsets3d = np.sqrt(((rgeom - sgeom)**2).sum(axis=2))
+
+  offsets2d = np.sqrt((rx.T - sx)**2 + (rz.T - sz)**2)
+
+  return offsets3d, offsets2d
 
 def cycleskip_render (projnm, freq, obsfile, estfile):
 
@@ -36,7 +40,7 @@ def cycleskip_render (projnm, freq, obsfile, estfile):
   srcs = inidict['srcs']
   recs = inidict['recs']
 
-  offsets = offset_image(srcs, recs)
+  offsets3d, offsets2d = offset_image(srcs, recs)
 
   reader = ftypes['utest']
   dobs = reader(obsfile)
@@ -48,7 +52,9 @@ def cycleskip_render (projnm, freq, obsfile, estfile):
 
   ax = fig.add_subplot(1,1,1)
   ax.set_title('Phase Error $\phi$ at %3.3f Hz'%(freq,))
-  cs = ax.contour(offsets.T, colors='k')
+  cs = ax.contour(offsets3d.T, colors='k')
+  cl = ax.clabel(cs, inline=True, fmt='%6.0f')
+  cs = ax.contour(offsets2d.T, colors='0.75')
   cl = ax.clabel(cs, inline=True, fmt='%6.0f')
   im = ax.imshow(phi.real.T, vmin=-np.pi, vmax=np.pi, aspect='auto', cmap=matplotlib.cm.bwr)
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)

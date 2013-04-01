@@ -15,7 +15,28 @@ figopts_cycleskip = {
 	'figsize':	(15,13.3),
 }
 
-def cycleskip_render (freq, obsfile, estfile):
+def offset_image (srcs, recs):
+  sx, sy, sz, sw = srcs.T
+  rx, ry, rz, rw = recs.T
+  sgeom = srcs[:,:3]
+  rgeom = recs[:,:3]
+  ns = srcs.shape[0]
+  nr = recs.shape[0]
+
+  sgeom.shape = (ns, 1, 3)
+  rgeom.shape = (1, nr, 3)
+
+  offsets = np.sqrt(((rgeom - sgeom)**2).sum(axis=2))
+
+def cycleskip_render (projnm, freq, obsfile, estfile):
+
+  from pygeo.fullpy import readini
+  inidict = readini(projnm + '.ini')
+
+  srcs = inidict['srcs']
+  recs = inidict['recs']
+
+  offsets = offset_image(srcs, recs)
 
   reader = ftypes['utest']
   dobs = reader(obsfile)
@@ -27,10 +48,13 @@ def cycleskip_render (freq, obsfile, estfile):
 
   ax = fig.add_subplot(1,1,1)
   ax.set_title('Phase Error $\phi$ at %3.3f Hz'%(freq,))
-  print phi.shape
+  cs = ax.contour(offsets.T, colors=None)
+  cl = ax.clabel(cs, inline=True, fmt='%6.0f')
   im = ax.imshow(phi.real.T, vmin=-np.pi, vmax=np.pi, aspect='auto', cmap=matplotlib.cm.bwr)
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label('Phase Error (radians)')
+  cb.set_ylabel('Receiver')
+  cb.set_xlabel('Source')
 
   canvas = FigureCanvas(fig)
   renderer = canvas.get_renderer()
@@ -98,7 +122,7 @@ def view_cycleskiprender (request, path):
   utestfile = PROJNM + '.utest' + basefreq_formatted
 
   if (os.path.isfile(utobsfile) and os.path.isfile(utestfile)):
-    image = cycleskip_render(basefreq, utobsfile, utestfile)
+    image = cycleskip_render(PROJNM, basefreq, utobsfile, utestfile)
     response = HttpResponse(mimetype='image/png')
     image.save(response, 'PNG')
     return response

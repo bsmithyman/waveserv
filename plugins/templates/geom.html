@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+
+<h3>General Information</h3>
+<table class="fullwidthtable">
+  <tr>
+    <th>Project</th>
+    <th>Dimensions</th>
+    <th>Cell</th>
+    <th>Origin</th>
+    <th>nom</th>
+    <th>nsam</th>
+    <th>n<sub>ky</sub></th>
+    <th>method</th>
+    <th>Sampling</th>
+    <th>v<sub>min</sub></th>
+    <th>Tau</th>
+    <th>f<sub>base</sub><th>
+  </tr>
+  <tr>
+    <td>{{ projnm }}</td>
+    <td>{{ nx }}&times;{{ nz }}</td>
+    <td>{{ dx }}&times;{{ dz }} (m)</td>
+    <td>({{ xorig }}, {{ zorig }}) (m)</td>
+    <td>{{ nom }}</td>
+    <td>{{ nsam }}</td>
+    <td>{{ nky }}</td>
+    <td>{{ method }}</td>
+    <td>{{ deltatt }} (ms)</td>
+    <td>{{ vmin }}</td>
+    <td>{{ tau }}</td>
+    <td>{{ freqbase }} Hz</td>
+  </tr>
+  <tr>
+    <th>Inverse</th>
+    <th>datain</th>
+    <th>dataout</th>
+    <th>aniso</th>
+    <th>tbegin</th>
+    <th>reduce</th>
+    <th>redvel</th>
+    <th>waveout</th>
+    <th>nftout</th>
+    <th>ns</th>
+    <th>nr</th>
+    <th>ng</th>
+  </tr>
+  <tr>
+    <td>{{ inv }}</td>
+    <td>{{ datain }}</td>
+    <td>{{ dataout }}</td>
+    <td>{{ aniso }}</td>
+    <td>{{ tbegin }}</td>
+    <td>{{ reduce }}</td>
+    <td>{{ redvel }}</td>
+    <td>{{ waveout }}</td>
+    <td>{{ nftout }}</td>
+    <td>{{ ns }}</td>
+    <td>{{ nr }}</td>
+    <td>{{ ng }}</td>
+  </tr>
+</table>
+
+<h3>Model Geometry</h3>
+<img src='{% url "plugins.geom.view_geomrender" "geometry_xy" %}' alt="source / receiver geometry" class="metafig" />
+<br/>
+<img src='{% url "plugins.geom.view_geomrender" "geometry_xz" %}' alt="source / receiver geometry" class="metafig" />
+
+{% endblock content %}
+

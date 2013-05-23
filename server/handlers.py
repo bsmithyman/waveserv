@@ -5,17 +5,7 @@ import numpy as np
 # SEG-Y library
 from pygeo.segyread import SEGYFile
 
-# Image manipulation
-import Image, ImageChops
-
-# Plotting
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import matplotlib.cm
-
-# Database entries that are created on execution of the "waveserv" wrapper
-from server.models import Project
-project = Project.objects.all()[0]
+from server.helper import *
 
 DEBUG = project.debug
 VERBOSE = project.verbose
@@ -31,7 +21,7 @@ figopts = {
 }
 figopts_data = {
 	'facecolor':	'w',
-	'figsize':	(15,24),
+	'figsize':	(15,40),
 }
 
 
@@ -40,6 +30,8 @@ panel_plot_options = [{
 	'cmap': matplotlib.cm.jet,
 },{
 	'cmap': matplotlib.cm.jet,
+},{
+	'cmap': matplotlib.cm.bwr,
 },{
 	'cmap': matplotlib.cm.gray,
 }]
@@ -54,45 +46,6 @@ trace_plot_options = [{
 },{
 	'color': 'g',
 }]
-
-# Colour of the background to be removed automatically
-# (enables cropping of the figure canvas)
-autocropcolour = (255,255,255)
-
-# ------------------------------------------------------------------------
-# Helper functions
-
-def swap (trace):
-  return [trace, np.arange(len(trace))]
-
-def spectral_ap (traces):
-  '''
-  Returns the amplitude and phase of a set of data, given arrays corresponding
-  to the real and imaginary components.
-  '''
-
-  [real, imag] = traces
-
-  amp = np.sqrt(real**2 + imag**2)
-  phase = np.arctan(imag/real)
-
-  return [amp, phase]
-
-def auto_crop(im):
-  '''
-  Automatic PIL cropping from "Kevin Smith" on www.gossamer-threads.com
-  Takes a background colour option (set at the top of the file), and crops
-  the image canvas to get rid of excess.
-  '''
-
-  if (im.mode != "RGB"):
-    im = im.convert("RGB")
-  bg = Image.new("RGB", im.size, autocropcolour)
-  diff = ImageChops.difference(im, bg)
-  bbox = diff.getbbox()
-  if bbox:
-    return im.crop(bbox)
-  return im 
 
 # ------------------------------------------------------------------------
 # File access functions
@@ -155,7 +108,7 @@ def get_segy_complex (filename):
   real = sf[::2]#sf.readTraces(sf.findTraces('trid',1001,1001))
   imag = sf[1::2]#sf.readTraces(sf.findTraces('trid',1002,1002))
 
-  return [real, imag]
+  return real + 1j * imag
 
 # ------------------------------------------------------------------------
 
@@ -203,14 +156,16 @@ expressions_authoritative = {
 # Could make these distinct
 #'wave':	'^%s(?P<iter>[0-9]*)\.wave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
 #'bwav':	'^%s(?P<iter>[0-9]*)\.bwave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
-'utest':	[6,'Data','^%s\.u[td]?[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'utest':	[6,'Data','^%s\.(ut|vz|vx)[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'udiff':	[7,'Data Difference','^%s\.ud[ifoOesrcbt]+(?P<freq>[0-9]*\.?[0-9]+).*$'],
 # Could make these distinct
 #'gvp':		'^%s(?P<iter>[0-9]*)\.gvp(?P<freq>[0-9]*\.?[0-9]+)[^trfO]*$',
 #'gvpr':	'^%s(?P<iter>[0-9]*)\.gvpr(?P<freq>[0-9]*\.?[0-9]+).*$',
 #'gvpf':	'^%s(?P<iter>[0-9]*)\.gvpf(?P<freq>[0-9]*\.?[0-9]*).*$',
 #'gvpt':	'^%s(?P<iter>[0-9]*)\.gvpt(?P<freq>[0-9]*\.?[0-9]*).*$',
 #'gvpO':	'^%s(?P<iter>[0-9]*)\.gvpO(?P<freq>[0-9]*\.?[0-9]*).*$',
-'wave':		[7,'Wavefield','^%s(?P<iter>[0-9]*)\.(wave|bwave)(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'wave':		[8,'Wavefield','^%s(?P<iter>[0-9]*)\.(wave|bwave)(?P<freq>[0-9]*\.?[0-9]+).*$'],
+'slice':	[9,'Time Slice','^%s\.sl(?P<iter>[0-9]*)'],
 }
 redict_auth = compile_to_dict(expressions_authoritative)
 
@@ -328,6 +283,28 @@ def render_model_real (traces, figlabels, plotopts):
 
   return fig
 
+def render_slice_real (traces, figlabels, plotopts):
+  '''
+  Renders a 2-D plot of a set of real values with the dimensions of the model.
+  The colour scale is symmetric about zero.
+  '''
+
+  if (traces.shape[0] > traces.shape[1]):
+    figmode = 'horizontal'
+  else:
+    figmode = 'vertical'
+
+  fig = Figure(**figopts)
+
+  clip=1e5
+
+  ax = fig.add_subplot(1,1,1)
+  im = ax.imshow(traces.T, extent=figextent, vmin=-clip, vmax=clip, **plotopts[0])
+  cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
+  cb.set_label(figlabels['cb'])
+
+  return fig
+
 def render_wavefield_complex (traces, figlabels, plotopts):
   '''
   Renders two 2-D plots, representing the real and imaginary components of a
@@ -335,7 +312,7 @@ def render_wavefield_complex (traces, figlabels, plotopts):
   viz. the gradient, forward- or backword-propagated wavefield
   '''
 
-  [real, imag] = traces
+  [real, imag] = traces.real, traces.imag
 
   if (real.shape[0] > real.shape[1]):
     figmode = 'horizontal'
@@ -403,24 +380,74 @@ def render_wavefield_complex_ap (traces, figlabels, plotopts):
 
 def render_utest (traces, figlabels, plotopts):
   '''
-  Renders two 2-D plots, representing the phase and log-amplitude of a
-  frequency-domain data file.
+  Renders three 2-D plots, representing the log-real, phase and
+  log-amplitude of a frequency-domain data file.
   viz. utest, utobs, etc.
   '''
+
+  real, imag = traces.real, traces.imag
   [amp, phase] = spectral_ap(traces)
   logamp = np.log10(amp)
+  logreal = np.cos(phase) * logamp
 
   fig = Figure(**figopts_data)
+  fig.subplots_adjust(hspace=0.0)
 
-  ax = fig.add_subplot(2,1,1)
+  ax = fig.add_subplot(3,1,1)
+  ax.set_title('log Real')
+  im = ax.imshow(logreal, aspect='auto', origin='lower', **plotopts[1])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['rcb'])
+  ax.set_xlabel(figlabels['xaxis'])
+  ax.set_ylabel(figlabels['yaxis'])
+
+  ax = fig.add_subplot(3,1,2)
   ax.set_title('Phase')
-  im = ax.imshow(phase.T, aspect='auto', **plotopts[1])
+  im = ax.imshow(phase, aspect='auto', origin='lower', vmin=-np.pi, vmax=np.pi, **plotopts[2])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['pcb'])
+  ax.set_xlabel(figlabels['xaxis'])
+  ax.set_ylabel(figlabels['yaxis'])
+
+  ax = fig.add_subplot(3,1,3)
+  ax.set_title('log Amplitude')
+  im = ax.imshow(logamp, aspect='auto', origin='lower', **plotopts[0])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['lcb'])
+  ax.set_xlabel(figlabels['xaxis'])
+  ax.set_ylabel(figlabels['yaxis'])
+
+  return fig
+
+def render_udiff (traces, figlabels, plotopts):
+  '''
+  Renders three 2-D plots, representing the real, phase and
+  amplitude of a frequency-domain data difference file.
+  viz. udiff, etc.
+  '''
+
+  real, imag = traces.real, traces.imag
+  [amp, phase] = spectral_ap(traces)
+
+  fig = Figure(**figopts_data)
+  fig.subplots_adjust(hspace=0.0)
+
+  ax = fig.add_subplot(3,1,1)
+  ax.set_title('Real')
+  clip = max(abs(real.min()),abs(real.max()))
+  im = ax.imshow(real.T, aspect='auto', vmin=-clip, vmax=clip, **plotopts[1])
+  cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
+  cb.set_label(figlabels['rcb'])
+
+  ax = fig.add_subplot(3,1,2)
+  ax.set_title('Phase')
+  im = ax.imshow(phase.T, aspect='auto', vmin=-np.pi, vmax=np.pi, **plotopts[2])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['pcb'])
 
-  ax = fig.add_subplot(2,1,2)
-  ax.set_title('log Amplitude')
-  im = ax.imshow(logamp.T, aspect='auto', **plotopts[0])
+  ax = fig.add_subplot(3,1,3)
+  ax.set_title('Amplitude')
+  im = ax.imshow(amp.T, aspect='auto', **plotopts[0])
   cb = fig.colorbar(im, orientation='horizontal', shrink=0.50)
   cb.set_label(figlabels['lcb'])
 
@@ -438,7 +465,13 @@ labels = {
 	'src':		{	'cb':	'Amplitude',
 				'y':	'Time (ms)',
 				'x2':	'Source No.'},
-	'utest':	{	'lcb':	'Log Amplitude',
+	'utest':	{	'rcb':	'Log Real Amplitude',
+				'lcb':	'Log Amplitude',
+				'pcb':	'Phase',
+				'xaxis':'Receiver',
+				'yaxis':'Source'},
+	'udiff':	{	'rcb':	'Real Amplitude',
+				'lcb':	'Amplitude',
 				'pcb':	'Phase'},
 	'ilog':		{	'x':	'Iteration',
 				'obj':	'Objective Function',
@@ -461,7 +494,9 @@ ftypes = {
 	'bwav':		get_segy_complex,
 	'src':		get_segy_time,
 	'utest':	get_segy_complex,
+	'udiff':	get_segy_complex,
 	'ilog':		get_ilog,
+	'slice':	get_segy_real,
 }
 
 # Maps a given file-type key to the function that renders it.  Each function
@@ -491,9 +526,11 @@ mappings = {
 'wave':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
 
 #	'bwav':	lambda tr: render_wavefield_complex(tr, labels['field']),
-'src':	lambda tr: render_source(tr, labels['src'], trace_plot_options[0:2]+panel_plot_options[2:3]),
-'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[1:3]),
+'src':	lambda tr: render_source(tr, labels['src'], trace_plot_options[0:2]+panel_plot_options[3:4]),
+'utest':	lambda tr: render_utest(tr, labels['utest'], panel_plot_options[1:4]),
+'udiff':	lambda tr: render_udiff(tr, labels['udiff'], panel_plot_options[1:4]),
 'ilog':	lambda tr: render_ilog(tr, labels['ilog'], trace_plot_options),
+'slice':	lambda tr: render_slice_real(tr, labels['field'], panel_plot_options[2:3]),
 }
 
 # ------------------------------------------------------------------------
@@ -538,7 +575,7 @@ def handle (filename):
       try:
         fig = mappings[key](traces)
       except Exception as errorresult:
-        print('Unable to generate figure for file %s as %s.\n%s'(filename, key, errorresult))
+        print('Unable to generate figure for file %s as %s.\n%s'%(filename, key, errorresult))
         return None
 
       try:

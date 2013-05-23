@@ -1,7 +1,15 @@
 {% extends "base.html" %}
+{% load url from future %}
 
 {% block content %}
-<p>Listing of: {{ cwd }}</p>
+
+<ul id="extranav">
+  {% for plugitem in pluginlist %}
+  <li><a href='{% url plugitem.urltag %}' title='{{ plugitem.longname }}'>{{ plugitem.shortname }}</a></li>
+  {% endfor %}
+</ul>
+
+<p id="headtext">Listing of: {{ cwd }}</p>
 
 {% for matchclass in matchlist|dictsort:"id" %}
   {% if matchclass.result|length != 0 %}
@@ -29,8 +37,8 @@
       </tr>
       {% for item in matchclass.result|dictsort:sortby %}
       <tr class="{% if forloop.counter|divisibleby:2 %}evenrow{% else %}oddrow{% endif %}">
-        <td class="tdaction"><a class="button" href="{% url show item.filename %}" title="Display {{ item.filename }}">&nbsp;</a></td>
-        <td class="tdaction"><a class="button" href="{% url download item.filename %}" title="Download {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdaction"><a class="button" href="{% url 'show' item.filename %}" title="Display {{ item.filename }}">&nbsp;</a></td>
+        <td class="tdaction"><a class="button" href="{% url 'download' item.filename %}" title="Download {{ item.filename }}">&nbsp;</a></td>
         <td class="tdfreshnessindicator">{% if item.freshness != None %}<a class="freshnessindicator" style="background-color: rgb(192,{% widthratio item.freshness 1 255 %},128);"></a>{% endif %}</td>
         <td class="tdfilename">{{ item.filename }}</td>
         <td class="tditeration">{% if item.iteration != None %}{{ item.iteration }}{% endif %}</td>

@@ -1,0 +1,96 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Development &mdash; waveserv v1.2 documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="waveserv v1.2 documentation" href="index.html" />
+    <link rel="prev" title="Graphical User Interface" href="gui.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>waveserv v1.2 documentation</span></a></h1>
+        <h2 class="heading"><span>Development</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="gui.html">Graphical User Interface</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="development">
+<span id="devel"></span><h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p>To date, all development of <strong class="program">waveserv</strong> has been by me alone (Brendan Smithyman).  I&#8217;d be more than pleased to have someone else interested in the development, so please feel free to send questions, comments or fixes to me at <a class="reference external" href="mailto:bsmithyman&#37;&#52;&#48;eos&#46;ubc&#46;ca">bsmithyman<span>&#64;</span>eos<span>&#46;</span>ubc<span>&#46;</span>ca</a>.</p>
+<div class="section" id="main-executable">
+<h2>Main Executable<a class="headerlink" href="#main-executable" title="Permalink to this headline">¶</a></h2>
+<p>The <strong class="program">waveserv</strong> executable is written in Python, and uses <a class="reference external" href="http://docs.python.org/library/optparse.html#optparse" title="(in Python v2.7)"><tt class="xref py py-mod docutils literal"><span class="pre">optparse</span></tt></a> to generate the <a class="reference internal" href="cli.html#cli"><em>Command Line Interface</em></a>.  It also creates a minimal database for the <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> test web server on the fly, using a temporary <a class="reference external" href="http://docs.python.org/library/sqlite3.html#sqlite3" title="(in Python v2.7)"><tt class="xref py py-mod docutils literal"><span class="pre">sqlite3</span></tt></a> database to store the settings and data.  It imports the <tt class="xref py py-mod docutils literal"><span class="pre">django.core.management</span></tt> interface, and uses this to construct a new <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> project in the working directory.  The <tt class="xref py py-mod docutils literal"><span class="pre">pygeo.fullpy</span></tt> module is used to access the <strong>projnm.ini</strong> file from the working directory, and read the information.  This is stored in the <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> database.  While the current version of the interface does not implement this, there are provisions for storing source and receiver information, which would make it possible to plot sources and receivers over model images (or to create maps and geometry plots).</p>
+<p>The vast majority of the web-server code is handled by the <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> test web server, which is called using the <tt class="xref py py-mod docutils literal"><span class="pre">django.core.management</span></tt> interface near the end of the <strong class="program">waveserv</strong> source.  Unless otherwise specified, temporary files are deleted at the end of the execution.</p>
+</div>
+<div class="section" id="server-code">
+<h2>Server Code<a class="headerlink" href="#server-code" title="Permalink to this headline">¶</a></h2>
+<p>The main logic of the <strong class="program">waveserv</strong> program is managed by the server-side code in the <strong>server/</strong> directory:</p>
+<dl class="docutils">
+<dt><strong>urls.py</strong></dt>
+<dd>This file determines the URL (Uniform Resource Locator) structure of the web-based interface.  This determines which Python function handles each URL (e.g., <a class="reference external" href="/index">/index</a>, <a class="reference external" href="/show/...">/show/...</a>, <a class="reference external" href="/download/...">/download/...</a>).</dd>
+<dt><strong>models.py</strong></dt>
+<dd>This file defines the database model for <strong class="program">waveserv</strong>, which is necessary for storing information about the project (i.e., from the <strong>projnm.ini</strong> file).  The database is also used to store information for caching images; if the PNG image for a given geophysical datafile is more up-to-date than the file itself, a cached version is used rather than re-generating the figure.</dd>
+<dt><strong>views.py</strong></dt>
+<dd>This file contains code that deals with most/all of the <em>web-server</em> aspects of <strong class="program">waveserv</strong>.  This includes data processing for the listing page, the actual <em>rendering</em> of figures, handling downloads, caching, etc.  The intent is for this to include most of the processing that is web-interface specific, and as such it makes heavy use of <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> design techniques.  With the exception of some initial data management code, this file is made up of a series of <em>views</em>, which handle the server-side processing for web addresses listed in <strong>urls.py</strong>.</dd>
+<dt><strong>handlers.py</strong></dt>
+<dd>This file contains code that deals with most/all of the <em>geophysical</em> aspects of <strong class="program">waveserv</strong>.  This includes processing files, interfacing with geophysical data formats (viz., SEG-Y), generating figures in an abstract sense, and filesystem actions.  The file management is heavily dependent on the <a class="reference external" href="http://docs.python.org/library/re.html#re" title="(in Python v2.7)"><tt class="xref py py-mod docutils literal"><span class="pre">re</span></tt></a> module (for <em>regular expression</em> parsing); <strong class="program">waveserv</strong> knows how to handle a particular file type because of the lookup tables in this source file.  In principle, this could be used to generate plots separately from the web interface (e.g., for scripted generation of figures in conjunction with document preparation).</dd>
+<dt><strong>settings.py</strong></dt>
+<dd>This file is not actually used by <strong class="program">waveserv</strong> at all, but is required if you wish to test code using the regular <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> test server.</dd>
+<dt><strong>manage.py</strong></dt>
+<dd>This file is not actually used by <strong class="program">waveserv</strong> at all, but is required if you wish to test code using the regular <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> test server.</dd>
+</dl>
+</div>
+<div class="section" id="media-and-templates">
+<h2>Media and Templates<a class="headerlink" href="#media-and-templates" title="Permalink to this headline">¶</a></h2>
+<p>The web interface is built using the <tt class="xref py py-mod docutils literal"><span class="pre">django</span></tt> templating language, saved in a series of <strong>*.html</strong> files in the <strong>templates/</strong> directory.  These control most of the structural aspects of the GUI, and are populated with data using server-side Python scripting.  The visual elements are controlled mainly by a stylesheet stored in the <strong>media/</strong> directory.</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="gui.html">Graphical User Interface</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, Brendan Smithyman.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

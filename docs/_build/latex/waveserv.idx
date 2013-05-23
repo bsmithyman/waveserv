@@ -1,0 +1,16 @@
+\indexentry{waveserv command line option!--version|hyperpage}{5}
+\indexentry{--version!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-h, --help|hyperpage}{5}
+\indexentry{-h, --help!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-v, --verbose|hyperpage}{5}
+\indexentry{-v, --verbose!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-b ADDR, --bind=ADDR|hyperpage}{5}
+\indexentry{-b ADDR, --bind=ADDR!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-d FILE, --db=FILE|hyperpage}{5}
+\indexentry{-d FILE, --db=FILE!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-g, --serverdebug|hyperpage}{5}
+\indexentry{-g, --serverdebug!waveserv command line option|hyperpage}{5}
+\indexentry{waveserv command line option!-k, --keep|hyperpage}{6}
+\indexentry{-k, --keep!waveserv command line option|hyperpage}{6}
+\indexentry{waveserv command line option!-p DIBUPATH, --dibupath=DIBUPATH|hyperpage}{6}
+\indexentry{-p DIBUPATH, --dibupath=DIBUPATH!waveserv command line option|hyperpage}{6}

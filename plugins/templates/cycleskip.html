@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+
+<ul id="extranav">
+  {% for freq in validfreqs %}
+    <li><a href='{% url "plugins.cycleskip.view_cycleskip" %}?frequency={{ freq }}' title='{{ freq }} Hz'>{{ freq }}</a></li>
+  {% endfor %}
+</ul>
+<p id="headtext">Frequencies for which both utest and utobs files exist:</p>
+
+<img src='{% url "plugins.cycleskip.view_cycleskiprender" frequency %}.png' alt='phase of data residual' class='metafig' />
+
+{% endblock content %}

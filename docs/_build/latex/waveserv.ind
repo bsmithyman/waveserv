@@ -1,0 +1,34 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter {Symbols}
+  \item --version
+    \subitem waveserv command line option, \hyperpage{5}
+  \item -b ADDR, --bind=ADDR
+    \subitem waveserv command line option, \hyperpage{5}
+  \item -d FILE, --db=FILE
+    \subitem waveserv command line option, \hyperpage{5}
+  \item -g, --serverdebug
+    \subitem waveserv command line option, \hyperpage{5}
+  \item -h, --help
+    \subitem waveserv command line option, \hyperpage{5}
+  \item -k, --keep
+    \subitem waveserv command line option, \hyperpage{6}
+  \item -p DIBUPATH, --dibupath=DIBUPATH
+    \subitem waveserv command line option, \hyperpage{6}
+  \item -v, --verbose
+    \subitem waveserv command line option, \hyperpage{5}
+
+  \indexspace
+  \bigletter W
+  \item waveserv command line option
+    \subitem --version, \hyperpage{5}
+    \subitem -b ADDR, --bind=ADDR, \hyperpage{5}
+    \subitem -d FILE, --db=FILE, \hyperpage{5}
+    \subitem -g, --serverdebug, \hyperpage{5}
+    \subitem -h, --help, \hyperpage{5}
+    \subitem -k, --keep, \hyperpage{6}
+    \subitem -p DIBUPATH, --dibupath=DIBUPATH, \hyperpage{6}
+    \subitem -v, --verbose, \hyperpage{5}
+
+\end{theindex}

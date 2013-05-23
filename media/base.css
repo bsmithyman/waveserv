@@ -173,6 +173,18 @@ hr {
 
 table.fullwidthtable {
   width: 100%;
+  padding-bottom: 1em;
+}
+
+.tdfreshnessindicator {
+  width: 20px;
+}
+
+.freshnessindicator {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: auto;
 }
 
 .tdfreshnessindicator {
@@ -269,4 +281,37 @@ a.button {
 
 a.button:hover {
   background-color: orange;
+}
+
+.metafig {
+  padding: 1em 0;
+}
+
+#extranav {
+  float: right;
+}
+
+#extranav li {
+  color: #487858;
+  display: inline;
+  background-color: #F0F0F0;
+  border: 1px solid #487858;
+  padding: 2px;
+  font-size: smaller;
+}
+
+#extranav li:hover {
+  background-color: orange;
+}
+
+#extranav li a {
+  text-decoration: none;
+}
+
+#extranav li:hover a {
+  color: white;
+}
+
+#headtext {
+  padding-bottom: 1em;
 }

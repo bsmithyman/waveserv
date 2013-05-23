@@ -1,0 +1,87 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graphical User Interface &mdash; waveserv v1.2 documentation</title>
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="waveserv v1.2 documentation" href="index.html" />
+    <link rel="next" title="Development" href="development.html" />
+    <link rel="prev" title="Command Line Interface" href="cli.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>waveserv v1.2 documentation</span></a></h1>
+        <h2 class="heading"><span>Graphical User Interface</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="cli.html">Command Line Interface</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="development.html">Development</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="graphical-user-interface">
+<span id="gui"></span><h1>Graphical User Interface<a class="headerlink" href="#graphical-user-interface" title="Permalink to this headline">¶</a></h1>
+<p>The <strong class="program">waveserv</strong> program directly indexes and reads the (SEG-Y) files in the directory working directory on the server, handling endian and floating point conversion, and provides a directory listing through the web-browser interface.  The web-based GUI is rendered by the <strong class="program">waveserv</strong> executable, which is started using a <a class="reference internal" href="cli.html#cli"><em>Command Line Interface</em></a>.</p>
+<p>With the <strong class="program">waveserv</strong> server running, navigate to <a class="reference external" href="http://localhost:1503/index">http://localhost:1503/index</a> to show the directory listing:</p>
+<div class="figure">
+<img alt="_images/listing.png" src="_images/listing.png" />
+<p class="caption">Directory listing rendered by <strong class="program">waveserv</strong>.</p>
+</div>
+<p>Each type of file is grouped under a descriptive heading, and the entries under each heading are sorted.  Several pieces of information are available for each entry, including the <em>filename</em>, <em>size</em>, and <em>modification time</em>.  Additionally, for files that correspond to a particular <em>frequency</em> or <em>iteration</em>, this information is extracted from the filename.  Each of these headings can be used as a sort key; simply click the corresponding check box (beside the column heading) to change the sort key.  The current sort key is indicated by a box that is coloured differently from the others.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 1.1: </span>An indicator shows the freshness of each file graphically.</p>
+<p>Each entry has two buttons, labelled <em>Show</em> and <em>Get</em>.  Clicking the <em>Get</em> button simply downloads the original file.  The <em>Show</em> button beside an entry displays a graphical representation of the file.  This takes you to <a class="reference external" href="http://localhost:1503/show/filename">http://localhost:1503/show/filename</a> for a file <em>filename</em>, which is a web address that calls a plotting method, which generates a PNG image.</p>
+<div class="figure">
+<img alt="_images/qpmodel.png" src="_images/qpmodel.png" />
+<p class="caption">Example plot for an attenuation (1/Q) model, for the project <em>line05</em>.</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="cli.html">Command Line Interface</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="development.html">Development</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, Brendan Smithyman.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

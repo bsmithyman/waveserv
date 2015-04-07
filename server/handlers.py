@@ -85,7 +85,7 @@ def get_segy_time (filename):
   sf = SEGYFile(filename, endian=endian, verbose=VERBOSE)
   traces = sf.readTraces()
 
-  return [traces, sf.bhead['hdt']]
+  return [traces, sf.bhead['hdt'], sf.trhead[0]['lagb']]
 
 def get_segy_real (filename):
   '''
@@ -151,7 +151,7 @@ expressions_authoritative = {
 'vp':		[1,'Velocity','^%s(?P<iter>[0-9]*)\.vp(?P<freq>[0-9]*\.?[0-9]+)?[^i]*$'],
 'qp':		[2,'Attenuation','^%s(?P<iter>[0-9]*)\.qp(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
 'vpi':		[3,'iVelocity','^%s(?P<iter>[0-9]*)\.vpi(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
-'src':		[4,'Source','^%s\.(new)?src$'],
+'src':		[4,'Source','^%s\.(new)?src(\.avg)?$'],
 'gvp':		[5,'Gradient','^%s(?P<iter>[0-9]*)\.gvp[a-z]?(?P<freq>[0-9]*\.?[0-9]+)?.*$'],
 # Could make these distinct
 #'wave':	'^%s(?P<iter>[0-9]*)\.wave(?P<freq>[0-9]*\.?[0-9]+)?.*$',
@@ -223,13 +223,13 @@ def render_source (info, figlabels, plotopts):
    - the normalized traces, subsequently averaged
   '''
 
-  [traces, dt] = info
+  [traces, dt, lagb] = info
 
   fig = Figure(**figopts)
 
   if (traces.ndim == 1):
     ax = fig.add_subplot(1,1,1)
-    ax.plot(traces, np.arange(len(traces))*(dt/1000.), **plotopts[0])
+    ax.plot(traces, np.arange(len(traces))*(dt/1000.) + lagb, **plotopts[0])
     ax.invert_yaxis()
     ax.axis('tight')
     ax.set_ylabel(figlabels['y'])
@@ -239,7 +239,7 @@ def render_source (info, figlabels, plotopts):
     meantraces = traces.mean(axis=0)
     meantraces = meantraces / abs(meantraces).max()
     normmeantraces = (traces.T / abs(traces).max(axis=1)).mean(axis=1)
-    timeaxis = np.arange(traces.shape[1])*(dt/1000.)
+    timeaxis = np.arange(traces.shape[1])*(dt/1000.) + lagb
 
     ax.plot(meantraces, timeaxis, label='Average Trace', **plotopts[0])
     ax.fill_betweenx(timeaxis, meantraces, where=meantraces>0, **plotopts[0])
@@ -253,7 +253,7 @@ def render_source (info, figlabels, plotopts):
 
     ax = fig.add_subplot(1,2,2)
 
-    im = ax.imshow(traces.T, aspect='auto', extent=[1,traces.shape[0],traces.shape[1]*dt/1000., 0], **plotopts[2])
+    im = ax.imshow(traces.T, aspect='auto', extent=[1,traces.shape[0],traces.shape[1]*dt/1000 + lagb, lagb], **plotopts[2])
 
     ax.set_ylabel(figlabels['y'])
     ax.set_xlabel(figlabels['x2'])

@@ -588,7 +588,7 @@ def handle (filename):
       renderer.dpi = dpi
       canvas.draw()
       l,b,w,h = [int(item) for item in canvas.figure.bbox.bounds]
-      im = Image.fromstring("RGB", (w,h), canvas.tostring_rgb())
+      im = Image.frombytes("RGB", (w,h), canvas.tostring_rgb())
       im = auto_crop(im)
   
       return im

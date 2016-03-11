@@ -1,7 +1,7 @@
 import numpy as np
 
 # Image manipulation
-import Image, ImageChops
+from PIL import Image, ImageChops
 
 # Plotting
 import matplotlib

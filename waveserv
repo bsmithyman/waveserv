@@ -82,7 +82,7 @@ except:
 # Django settings initialization
 
 cwd = os.getcwd()
-SCRIPTDIR = os.path.abspath(os.path.dirname(globals()['__file__']))
+SCRIPTDIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(SCRIPTDIR)
 SERVDIR = SCRIPTDIR + '/server'
 TEMPLATEDIR = SCRIPTDIR + '/templates'

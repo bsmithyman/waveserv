@@ -314,6 +314,12 @@ def render_wavefield_complex (traces, figlabels, plotopts):
 
   [real, imag] = traces.real, traces.imag
 
+  clip = abs(real + 1j * imag).max()
+  update = {
+    'vmin': -clip,
+    'vmax': clip,
+  }
+
   if (real.shape[0] > real.shape[1]):
     figmode = 'horizontal'
   else:
@@ -326,7 +332,9 @@ def render_wavefield_complex (traces, figlabels, plotopts):
   else:
     ax = fig.add_subplot(1,2,1)
   ax.set_title('Real')
-  im = ax.imshow(real.T, extent=figextent, **plotopts[0])
+  plotopts0 = {key: plotopts[0][key] for key in plotopts[0]}
+  plotopts0.update(update)
+  im = ax.imshow(real.T, extent=figextent, **plotopts0)
   cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
   cb.set_label(figlabels['cb'])
 
@@ -335,7 +343,9 @@ def render_wavefield_complex (traces, figlabels, plotopts):
   else:
     ax = fig.add_subplot(1,2,2)
   ax.set_title('Imaginary')
-  im = ax.imshow(imag.T, extent=figextent, **plotopts[1])
+  plotopts1 = {key: plotopts[1][key] for key in plotopts[1]}
+  plotopts1.update(update)
+  im = ax.imshow(imag.T, extent=figextent, **plotopts1)
   cb = fig.colorbar(im, orientation=figmode, shrink=0.50)
   cb.set_label(figlabels['cb'])
 
@@ -508,7 +518,7 @@ mappings = {
 'qp':	lambda tr: render_model_real(tr, labels['qp'], panel_plot_options[1:2]),
 
 # Version that shows real and imaginary components of the gradient
-'gvp':	lambda tr: render_wavefield_complex(tr, labels['field'], panel_plot_options[0:2]),
+'gvp':	lambda tr: render_wavefield_complex(tr, labels['field'], [panel_plot_options[2],panel_plot_options[2]]),
 
 # Version that shows phase and log amplitude of the gradient
 #'gvp':	lambda tr: render_wavefield_complex_ap(tr, labels['field'], panel_plot_options[1:3]),
